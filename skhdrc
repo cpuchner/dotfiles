@@ -4,3 +4,8 @@ hyper - d : yabai -m space --focus 3
 hyper - f : yabai -m space --focus 4
 hyper - g : yabai -m space --focus 5
 hyper - b : yabai -m space --focus 6
+
+cmd - h : yabai -m window --focus west
+cmd - j : yabai -m window --focus south
+cmd - k : yabai -m window --focus north
+cmd - l : yabai -m window --focus east

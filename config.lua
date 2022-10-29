@@ -67,6 +67,14 @@ lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
+lvim.builtin.nvimtree.setup.sync_root_with_cwd = true
+lvim.builtin.nvimtree.setup.respect_buf_cwd = true
+lvim.builtin.nvimtree.setup.update_focused_file = {
+  enable = true,
+  update_root = true
+}
+-- lvim.builtin.project.patterns = { ".git", "project.json", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" }
+lvim.builtin.project.patterns = { ".git" }
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
@@ -175,16 +183,16 @@ formatters.setup {
 
 -- Additional Plugins
 lvim.plugins = {
-  {
-    "ahmedkhalf/project.nvim",
-    config = function()
-      require("project_nvim").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      }
-    end
-  }
+  --  {
+  --    "ahmedkhalf/project.nvim",
+  --    config = function()
+  --      require("project_nvim").setup {
+  --        -- your configuration comes here
+  --        -- or leave it empty to use the default settings
+  --        -- refer to the configuration section below
+  --      }
+  --    end
+  --  }
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
