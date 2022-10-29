@@ -1,0 +1,6 @@
+hyper - a : yabai -m space --focus 1
+hyper - s : yabai -m space --focus 2
+hyper - d : yabai -m space --focus 3
+hyper - f : yabai -m space --focus 4
+hyper - g : yabai -m space --focus 5
+hyper - b : yabai -m space --focus 6
