@@ -61,8 +61,8 @@
       "MO(2)",
       "KC_ENT",
       "KC_SPC",
-      "MO(1)",
-      "KC_ESC"
+      "KC_ESC",
+      "MO(1)"
     ],
     [
       "KC_TRNS",
@@ -177,8 +177,8 @@
       "KC_TRNS",
       "KC_TRNS",
       "KC_TRNS",
-      "MO(3)",
-      "KC_TRNS"
+      "KC_TRNS",
+      "MO(3)"
     ],
     [
       "KC_CAPS",
