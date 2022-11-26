@@ -8,12 +8,20 @@ an executable
 ]]
 -- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
 
+-- TODO: 
+-- consider also removing the buffer line???
+--
+lvim.transparent_window = true
+lvim.builtin.theme.options.styles.sidebars = "transparent"
+lvim.builtin.theme.options.styles.floats = "transparent"
+
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = false
 lvim.colorscheme = "tokyonight"
 -- to disable icons and use a minimalist setup, uncomment the following
--- lvim.use_icons = false
+lvim.use_icons = false
+
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -25,7 +33,6 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- vim.keymap.del("n", "<C-Up>")
 -- override a default keymapping
 -- lvim.keys.normal_mode["<C-q>"] = ":q<cr>" -- or vim.keymap.set("n", "<C-q>", ":q<cr>" )
-
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
 -- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
 -- local _, actions = pcall(require, "telescope.actions")
@@ -160,8 +167,13 @@ linters.setup {
 }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-  { command = "eslint_d",
+   {
+    command = "eslint_d",
     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
+  },
+  {
+    command = "prettierd",
+    filetypes = { "html" }
   }
 }
 -- local linters = require "lvim.lsp.null-ls.linters"
