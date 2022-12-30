@@ -8,7 +8,7 @@ an executable
 ]]
 -- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
 
--- TODO: 
+-- TODO:
 -- consider also removing the buffer line???
 --
 lvim.transparent_window = true
@@ -20,7 +20,7 @@ lvim.log.level = "warn"
 lvim.format_on_save = false
 lvim.colorscheme = "tokyonight"
 -- to disable icons and use a minimalist setup, uncomment the following
-lvim.use_icons = false
+lvim.use_icons = true
 
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
@@ -56,6 +56,7 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- lvim.builtin.theme.options.style = "storm"
 
 -- Use which-key to add extra bindings with the leader-key prefix
+lvim.builtin.which_key.mappings["k"] = { "<cmd>Copilot panel<CR>", "Copilot panel" }
 lvim.builtin.which_key.mappings["j"] = { "<cmd>Telescope projects<CR>", "Projects" }
 -- lvim.builtin.which_key.mappings["t"] = {
 --   name = "+Trouble",
@@ -167,7 +168,7 @@ linters.setup {
 }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-   {
+  {
     command = "eslint_d",
     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
   },
@@ -176,36 +177,39 @@ formatters.setup {
     filetypes = { "html" }
   }
 }
--- local linters = require "lvim.lsp.null-ls.linters"
--- linters.setup {
---   { command = "flake8", filetypes = { "python" } },
---   {
---     -- each linter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
---     command = "shellcheck",
---     ---@usage arguments to pass to the formatter
---     -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
---     extra_args = { "--severity", "warning" },
---   },
---   {
---     command = "codespell",
---     ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
---     filetypes = { "javascript", "python" },
---   },
--- }
 
 -- Additional Plugins
 lvim.plugins = {
-  --  {
-  --    "ahmedkhalf/project.nvim",
-  --    config = function()
-  --      require("project_nvim").setup {
-  --        -- your configuration comes here
-  --        -- or leave it empty to use the default settings
-  --        -- refer to the configuration section below
-  --      }
-  --    end
-  --  }
+  { "zbirenbaum/copilot.lua",
+    event = { "VimEnter" },
+    config = function()
+      vim.defer_fn(function()
+        require("copilot").setup {
+          plugin_manager_path = get_runtime_dir() .. "/site/pack/packer",
+          suggestion = {
+            enabled = true,
+            auto_trigger = true,
+            debounce = 75,
+            keymap = {
+              accept = "<M-v>",
+              accept_word = false,
+              accept_line = false,
+              next = "<M-c>",
+              prev = "<M-x>",
+              dismiss = "<C-z>",
+            },
+          },
+        }
+      end, 100)
+    end,
+  },
+  { "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua", "nvim-cmp" },
+  },
 }
+
+lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
+table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 -- vim.api.nvim_create_autocmd("BufEnter", {
@@ -220,3 +224,4 @@ lvim.plugins = {
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
+
