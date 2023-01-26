@@ -22,3 +22,5 @@ cmd + shift - j : yabai -m window --swap south
 cmd + shift - k : yabai -m window --swap north
 cmd + shift - l : yabai -m window --swap east
 
+cmd + shift - v : yabai -m window --toggle split
+
