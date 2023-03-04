@@ -12,8 +12,6 @@ an executable
 -- consider also removing the buffer line???
 --
 lvim.transparent_window = true
-lvim.builtin.theme.options.styles.sidebars = "transparent"
-lvim.builtin.theme.options.styles.floats = "transparent"
 
 -- general
 lvim.log.level = "warn"
@@ -173,6 +171,7 @@ formatters.setup {
     command = "eslint_d",
     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
   },
+  { command = "black", filetypes = { "python" } },
   {
     command = "prettierd",
     filetypes = { "html" }
@@ -181,7 +180,22 @@ formatters.setup {
 
 -- Additional Plugins
 lvim.plugins = {
-  { "zbirenbaum/copilot.lua",
+  { "lunarvim/colorschemes" },
+  {
+    "folke/tokyonight.nvim",
+    config = function()
+      require("tokyonight").setup({
+        transparent = true,
+        styles = {
+          sidebars = "transparent", -- style for sidebars, see below
+          floats = "transparent", -- style for floating windows
+        },
+      })
+    end
+  },
+  { "catppuccin/nvim" },
+  {
+    "zbirenbaum/copilot.lua",
     event = { "VimEnter" },
     config = function()
       vim.defer_fn(function()
@@ -225,4 +239,3 @@ table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
-
