@@ -163,21 +163,17 @@ require("lvim.lsp.manager").setup("tsserver", opts)
 -- }
 
 -- -- set additional linters
-local linters = require "lvim.lsp.null-ls.linters"
-linters.setup {
-  { command = "eslint_d",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
-}
+-- local linters = require "lvim.lsp.null-ls.linters"
+-- linters.setup {
+--   { command = "eslint_d",
+--     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+-- }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-  {
-    command = "eslint_d",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
-  },
   { command = "black", filetypes = { "python" } },
   {
     command = "prettierd",
-    filetypes = { "html" }
+    filetypes = { "html", "typescript", "typescriptreact", "javascript", "javascriptreact" }
   }
 }
 
@@ -222,6 +218,19 @@ lvim.plugins = {
   },
   { "zbirenbaum/copilot-cmp",
     after = { "copilot.lua", "nvim-cmp" },
+  },
+  {
+    'theprimeagen/harpoon',
+    config = function()
+      local mark = require('harpoon.mark')
+      local ui = require('harpoon.ui')
+
+      lvim.builtin.which_key.mappings["a"] = { mark.add_file, "Harpoon mark" }
+
+      vim.keymap.set("n", "<C-m>", ui.toggle_quick_menu)
+      vim.keymap.set("n", "<C-p>", function() ui.nav_prev() end)
+      vim.keymap.set("n", "<C-n>", function() ui.nav_next() end)
+    end,
   },
 }
 
