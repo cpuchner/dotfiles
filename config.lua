@@ -1,5 +1,5 @@
 --[[
-lvim is the global options object
+
 
 Linters should be
 filled in as strings with either
@@ -222,12 +222,18 @@ lvim.plugins = {
   {
     'theprimeagen/harpoon',
     config = function()
+      require("harpoon").setup({
+        menu = {
+          width = math.min(vim.api.nvim_win_get_width(0) - 4, 120),
+        },
+      })
+
       local mark = require('harpoon.mark')
       local ui = require('harpoon.ui')
 
       lvim.builtin.which_key.mappings["a"] = { mark.add_file, "Harpoon mark" }
 
-      vim.keymap.set("n", "<C-m>", ui.toggle_quick_menu)
+      vim.keymap.set("n", "<M-m>", ui.toggle_quick_menu)
       vim.keymap.set("n", "<C-p>", function() ui.nav_prev() end)
       vim.keymap.set("n", "<C-n>", function() ui.nav_next() end)
     end,
