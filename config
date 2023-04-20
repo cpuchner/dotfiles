@@ -34,7 +34,7 @@ exec --no-startup-id xset r rate 200 50
 
 # Backgroun image stuff
 exec_always --no-startup-id /usr/bin/compton
-exec_always --no-startup-id /usr/bin/feh --bg-max "/home/carl/Downloads/wallhaven-d63q8o.png"
+exec_always --no-startup-id /usr/bin/feh --bg-max "/home/carl/Downloads/wallpaper.png"
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
