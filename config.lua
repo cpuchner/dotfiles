@@ -89,6 +89,7 @@ lvim.builtin.treesitter.ensure_installed = {
   "javascript",
   "json",
   "lua",
+  "sql",
   "python",
   "typescript",
   "tsx",
@@ -163,18 +164,23 @@ require("lvim.lsp.manager").setup("tsserver", opts)
 -- }
 
 -- -- set additional linters
--- local linters = require "lvim.lsp.null-ls.linters"
--- linters.setup {
---   { command = "eslint_d",
---     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
--- }
+local linters = require "lvim.lsp.null-ls.linters"
+linters.setup {
+  { command = "eslint_d",
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+}
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   { command = "black", filetypes = { "python" } },
   {
     command = "prettierd",
-    filetypes = { "html", "typescript", "typescriptreact", "javascript", "javascriptreact" }
+    filetypes = { "html" }
+  },
+  {
+    command = "dprint",
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact"  }
   }
+
 }
 
 -- Additional Plugins
@@ -220,6 +226,7 @@ lvim.plugins = {
     after = { "copilot.lua", "nvim-cmp" },
   },
   {
+
     'theprimeagen/harpoon',
     config = function()
       require("harpoon").setup({
