@@ -164,11 +164,11 @@ require("lvim.lsp.manager").setup("tsserver", opts)
 -- }
 
 -- -- set additional linters
-local linters = require "lvim.lsp.null-ls.linters"
-linters.setup {
-  { command = "eslint_d",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
-}
+-- local linters = require "lvim.lsp.null-ls.linters"
+-- linters.setup {
+--   { command = "eslint_d",
+--     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+-- }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   { command = "black", filetypes = { "python" } },
@@ -191,6 +191,7 @@ lvim.plugins = {
     config = function()
       require("tokyonight").setup({
         transparent = true,
+        style = "night",
         styles = {
           sidebars = "transparent", -- style for sidebars, see below
           floats = "transparent", -- style for floating windows
@@ -245,6 +246,18 @@ lvim.plugins = {
       vim.keymap.set("n", "<C-n>", function() ui.nav_next() end)
     end,
   },
+  {
+    "jackMort/ChatGPT.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("chatgpt").setup()
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    }
+  }
 }
 
 lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
