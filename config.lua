@@ -179,8 +179,11 @@ formatters.setup {
   {
     command = "dprint",
     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact"  }
+  },
+  {
+    command = "ocamlformat",
+    filetypes = { "ocaml" }
   }
-
 }
 
 -- Additional Plugins
