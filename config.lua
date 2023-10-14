@@ -13,6 +13,8 @@ an executable
 --
 lvim.transparent_window = true
 
+lvim.builtin.nvimtree.setup.view.width = 79;
+
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = false
@@ -164,17 +166,17 @@ require("lvim.lsp.manager").setup("tsserver", opts)
 -- }
 
 -- -- set additional linters
--- local linters = require "lvim.lsp.null-ls.linters"
--- linters.setup {
---   { command = "eslint_d",
---     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
--- }
+local linters = require "lvim.lsp.null-ls.linters"
+linters.setup {
+  { command = "eslint_d",
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+}
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   { command = "black", filetypes = { "python" } },
   {
-    command = "prettierd",
-    filetypes = { "html" }
+    command = "prettier",
+    filetypes = { "html", "typescript", "typescriptreact", "javascript", "javascriptreact" }
   },
   {
     command = "dprint",
