@@ -1,6 +1,5 @@
 --[[
 
-
 Linters should be
 filled in as strings with either
 a global executable or a path to
@@ -21,7 +20,6 @@ lvim.format_on_save = false
 lvim.colorscheme = "tokyonight"
 -- to disable icons and use a minimalist setup, uncomment the following
 lvim.use_icons = true
-
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -58,6 +56,7 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- Use which-key to add extra bindings with the leader-key prefix
 lvim.builtin.which_key.mappings["k"] = { "<cmd>Copilot panel<CR>", "Copilot panel" }
 lvim.builtin.which_key.mappings["j"] = { "<cmd>Telescope projects<CR>", "Projects" }
+
 -- lvim.builtin.which_key.mappings["t"] = {
 --   name = "+Trouble",
 --   r = { "<cmd>Trouble lsp_references<cr>", "References" },
@@ -100,6 +99,7 @@ lvim.builtin.treesitter.ensure_installed = {
   "java",
   "yaml",
   "elixir",
+  "gleam",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
@@ -131,6 +131,7 @@ local opts = {
   root_dir = require('lspconfig.util').root_pattern('.git')
 }
 require("lvim.lsp.manager").setup("tsserver", opts)
+require'lspconfig'.gleam.setup{}
 --
 
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
@@ -168,8 +169,10 @@ require("lvim.lsp.manager").setup("tsserver", opts)
 -- -- set additional linters
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-  { command = "eslint_d",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+  {
+    command = "eslint_d",
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
+  }
 }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
@@ -179,10 +182,6 @@ formatters.setup {
     filetypes = { "html", "typescript", "typescriptreact", "javascript", "javascriptreact" }
   },
   {
-    command = "dprint",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact"  }
-  },
-  {
     command = "ocamlformat",
     filetypes = { "ocaml" }
   }
@@ -190,6 +189,17 @@ formatters.setup {
 
 -- Additional Plugins
 lvim.plugins = {
+  -- {
+  --   dir = '/home/carl/dev/neowolverine',
+  --   name = 'neowolverine'
+  -- },
+  -- {
+  --   dir = '/home/carl/oss/gp.nvim',
+  --   name = 'gp.nvim',
+  --   config = function()
+  --     require('gp').setup()
+  --   end
+  -- },
   { "lunarvim/colorschemes" },
   {
     "folke/tokyonight.nvim",
@@ -199,7 +209,7 @@ lvim.plugins = {
         style = "night",
         styles = {
           sidebars = "transparent", -- style for sidebars, see below
-          floats = "transparent", -- style for floating windows
+          floats = "transparent",   -- style for floating windows
         },
       })
     end
@@ -228,11 +238,11 @@ lvim.plugins = {
       end, 100)
     end,
   },
-  { "zbirenbaum/copilot-cmp",
+  {
+    "zbirenbaum/copilot-cmp",
     after = { "copilot.lua", "nvim-cmp" },
   },
   {
-
     'theprimeagen/harpoon',
     config = function()
       require("harpoon").setup({
@@ -251,22 +261,16 @@ lvim.plugins = {
       vim.keymap.set("n", "<C-n>", function() ui.nav_next() end)
     end,
   },
-  {
-    "jackMort/ChatGPT.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("chatgpt").setup()
-    end,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim"
-    }
-  }
 }
 
 lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
 table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
+
+lvim.builtin.cmp.formatting.source_names["uuid"] = "(Uuid)"
+table.insert(lvim.builtin.cmp.sources, 1, { name = "uuid" })
+local cmp = require "cmp"
+local uuid = require("uuid")
+cmp.register_source("uuid", uuid)
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 -- vim.api.nvim_create_autocmd("BufEnter", {
