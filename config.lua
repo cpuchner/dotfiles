@@ -16,6 +16,8 @@ vim.opt.expandtab = false
 
 lvim.builtin.nvimtree.setup.view.width = 79;
 
+lvim.builtin.telescope.defaults.path_display = { "truncate" }
+
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = false
