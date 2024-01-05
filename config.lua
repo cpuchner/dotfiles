@@ -12,6 +12,8 @@ an executable
 --
 lvim.transparent_window = true
 
+vim.opt.expandtab = false
+
 lvim.builtin.nvimtree.setup.view.width = 79;
 
 -- general
@@ -34,6 +36,10 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
 -- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
 -- local _, actions = pcall(require, "telescope.actions")
+lvim.builtin.telescope.defaults.layout_strategy = "vertical"
+lvim.builtin.telescope.defaults.layout_config = {
+  vertical = { width = 0.8, height = 0.8, prompt_position = "top", preview_height = 0.6 }
+}
 -- lvim.builtin.telescope.defaults.mappings = {
 --   -- for input mode
 --   i = {
@@ -126,11 +132,14 @@ lvim.builtin.treesitter.highlight.enable = true
 
 -- ---configure a server manually. !!Requires `:LvimCacheReset` to take effect!!
 -- ---see the full default list `:lua print(vim.inspect(lvim.lsp.automatic_configuration.skipped_servers))`
-vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tsserver" })
-local opts = {
-  root_dir = require('lspconfig.util').root_pattern('.git')
-}
-require("lvim.lsp.manager").setup("tsserver", opts)
+
+
+-- Temporarily disabled to hopefully debug performance issues in engine
+-- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tsserver" })
+-- local opts = {
+--   root_dir = require('lspconfig.util').root_pattern('.git')
+-- }
+-- require("lvim.lsp.manager").setup("tsserver", opts)
 require'lspconfig'.gleam.setup{}
 --
 
@@ -169,10 +178,8 @@ require'lspconfig'.gleam.setup{}
 -- -- set additional linters
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-  {
-    command = "eslint_d",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
-  }
+  { command = "eslint_d",
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
 }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
@@ -181,6 +188,10 @@ formatters.setup {
     command = "prettier",
     filetypes = { "html", "typescript", "typescriptreact", "javascript", "javascriptreact" }
   },
+  -- {
+  --   command = "dprint",
+  --   filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact"  }
+  -- },
   {
     command = "ocamlformat",
     filetypes = { "ocaml" }
