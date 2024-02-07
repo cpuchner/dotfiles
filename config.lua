@@ -112,6 +112,15 @@ lvim.builtin.treesitter.ensure_installed = {
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enable = true
+lvim.builtin.treesitter.incremental_selection = {
+  enable = true,
+  keymaps = {
+    init_selection = "<CR>",
+    node_incremental = "<CR>",
+    scope_incremental = "<TAB>",
+    node_decremental = "<BS>",
+  },
+}
 
 -- generic LSP settings
 
@@ -142,7 +151,7 @@ lvim.builtin.treesitter.highlight.enable = true
 --   root_dir = require('lspconfig.util').root_pattern('.git')
 -- }
 -- require("lvim.lsp.manager").setup("tsserver", opts)
-require'lspconfig'.gleam.setup{}
+require 'lspconfig'.gleam.setup {}
 --
 
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
@@ -180,7 +189,7 @@ require'lspconfig'.gleam.setup{}
 -- -- set additional linters
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-  { command = "eslint_d",
+  { command = "eslint",
     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
 }
 local formatters = require "lvim.lsp.null-ls.formatters"
