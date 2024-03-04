@@ -144,7 +144,7 @@ lvim.builtin.treesitter.incremental_selection = {
 -- ---configure a server manually. !!Requires `:LvimCacheReset` to take effect!!
 -- ---see the full default list `:lua print(vim.inspect(lvim.lsp.automatic_configuration.skipped_servers))`
 
-require 'lspconfig'.gleam.setup {}
+require("lvim.lsp.manager").setup("gleam", {})
 
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
 -- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
