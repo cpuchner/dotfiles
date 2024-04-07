@@ -12,11 +12,13 @@ an executable
 --
 lvim.transparent_window = true
 
-vim.opt.expandtab = false
+vim.opt.expandtab = true
 
 lvim.builtin.nvimtree.setup.view.width = 79;
 
 lvim.builtin.telescope.defaults.path_display = { "truncate" }
+
+vim.keymap.set("n", "<LEADER>m", "<CMD>Telescope marks<CR>", { noremap = true, silent = true })
 
 -- general
 lvim.log.level = "warn"
@@ -179,11 +181,11 @@ require("lvim.lsp.manager").setup("gleam", {})
 -- }
 
 -- -- set additional linters
-local linters = require "lvim.lsp.null-ls.linters"
-linters.setup {
-  { command = "eslint",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
-}
+-- local linters = require "lvim.lsp.null-ls.linters"
+-- linters.setup {
+--   { command = "eslint",
+--     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+-- }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   { command = "black", filetypes = { "python" } },
@@ -223,39 +225,39 @@ lvim.plugins = {
         style = "night",
         styles = {
           sidebars = "transparent", -- style for sidebars, see below
-          floats = "transparent",   -- style for floating windows
+          floats = "transparent", -- style for floating windows
         },
       })
     end
   },
-  {
-    "zbirenbaum/copilot.lua",
-    event = { "VimEnter" },
-    config = function()
-      vim.defer_fn(function()
-        require("copilot").setup {
-          plugin_manager_path = get_runtime_dir() .. "/site/pack/packer",
-          suggestion = {
-            enabled = true,
-            auto_trigger = true,
-            debounce = 75,
-            keymap = {
-              accept = "<M-v>",
-              accept_word = false,
-              accept_line = false,
-              next = "<M-c>",
-              prev = "<M-x>",
-              dismiss = "<C-z>",
-            },
-          },
-        }
-      end, 100)
-    end,
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    after = { "copilot.lua", "nvim-cmp" },
-  },
+  -- {
+  -- 	"zbirenbaum/copilot.lua",
+  -- 	event = { "VimEnter" },
+  -- 	config = function()
+  -- 		vim.defer_fn(function()
+  -- 			require("copilot").setup {
+  -- 				plugin_manager_path = get_runtime_dir() .. "/site/pack/packer",
+  -- 				suggestion = {
+  -- 					enabled = true,
+  -- 					auto_trigger = true,
+  -- 					debounce = 75,
+  -- 					keymap = {
+  -- 						accept = "<M-v>",
+  -- 						accept_word = false,
+  -- 						accept_line = false,
+  -- 						next = "<M-c>",
+  -- 						prev = "<M-x>",
+  -- 						dismiss = "<C-z>",
+  -- 					},
+  -- 				},
+  -- 			}
+  -- 		end, 100)
+  -- 	end,
+  -- },
+  -- {
+  -- 	"zbirenbaum/copilot-cmp",
+  -- 	after = { "copilot.lua", "nvim-cmp" },
+  -- },
   {
     'theprimeagen/harpoon',
     config = function()
@@ -283,7 +285,7 @@ table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
 lvim.builtin.cmp.formatting.source_names["uuid"] = "(Uuid)"
 table.insert(lvim.builtin.cmp.sources, 1, { name = "uuid" })
 local cmp = require "cmp"
-local uuid = require("uuid")
+local uuid = require "uuid"
 cmp.register_source("uuid", uuid)
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
