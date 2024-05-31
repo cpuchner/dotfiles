@@ -9,8 +9,6 @@ an executable
 
 -- TODO:
 -- consider also removing the buffer line???
---
-lvim.transparent_window = true
 
 vim.opt.expandtab = true
 
@@ -23,7 +21,8 @@ vim.keymap.set("n", "<LEADER>m", "<CMD>Telescope marks<CR>", { noremap = true, s
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = false
-lvim.colorscheme = "tokyonight"
+lvim.colorscheme = "kanagawa-dragon"
+
 -- to disable icons and use a minimalist setup, uncomment the following
 lvim.use_icons = true
 
@@ -181,11 +180,11 @@ require("lvim.lsp.manager").setup("gleam", {})
 -- }
 
 -- -- set additional linters
--- local linters = require "lvim.lsp.null-ls.linters"
--- linters.setup {
---   { command = "eslint",
---     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
--- }
+local linters = require "lvim.lsp.null-ls.linters"
+linters.setup {
+  { command = "eslint",
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+}
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   { command = "black", filetypes = { "python" } },
@@ -217,19 +216,8 @@ lvim.plugins = {
   --   end
   -- },
   { "lunarvim/colorschemes" },
-  {
-    "folke/tokyonight.nvim",
-    config = function()
-      require("tokyonight").setup({
-        transparent = true,
-        style = "night",
-        styles = {
-          sidebars = "transparent", -- style for sidebars, see below
-          floats = "transparent", -- style for floating windows
-        },
-      })
-    end
-  },
+  { "rebelot/kanagawa.nvim" },
+  { "folke/tokyonight.nvim" },
   -- {
   -- 	"zbirenbaum/copilot.lua",
   -- 	event = { "VimEnter" },
