@@ -21,7 +21,10 @@ vim.keymap.set("n", "<LEADER>m", "<CMD>Telescope marks<CR>", { noremap = true, s
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = false
-lvim.colorscheme = "kanagawa-dragon"
+
+-- lvim.colorscheme = "kanagawa-dragon"
+-- lvim.colorscheme = "tokyonight-night"
+lvim.colorscheme = "nordic"
 
 -- to disable icons and use a minimalist setup, uncomment the following
 lvim.use_icons = true
@@ -204,48 +207,10 @@ formatters.setup {
 
 -- Additional Plugins
 lvim.plugins = {
-  -- {
-  --   dir = '/home/carl/dev/neowolverine',
-  --   name = 'neowolverine'
-  -- },
-  -- {
-  --   dir = '/home/carl/oss/gp.nvim',
-  --   name = 'gp.nvim',
-  --   config = function()
-  --     require('gp').setup()
-  --   end
-  -- },
   { "lunarvim/colorschemes" },
   { "rebelot/kanagawa.nvim" },
   { "folke/tokyonight.nvim" },
-  -- {
-  -- 	"zbirenbaum/copilot.lua",
-  -- 	event = { "VimEnter" },
-  -- 	config = function()
-  -- 		vim.defer_fn(function()
-  -- 			require("copilot").setup {
-  -- 				plugin_manager_path = get_runtime_dir() .. "/site/pack/packer",
-  -- 				suggestion = {
-  -- 					enabled = true,
-  -- 					auto_trigger = true,
-  -- 					debounce = 75,
-  -- 					keymap = {
-  -- 						accept = "<M-v>",
-  -- 						accept_word = false,
-  -- 						accept_line = false,
-  -- 						next = "<M-c>",
-  -- 						prev = "<M-x>",
-  -- 						dismiss = "<C-z>",
-  -- 					},
-  -- 				},
-  -- 			}
-  -- 		end, 100)
-  -- 	end,
-  -- },
-  -- {
-  -- 	"zbirenbaum/copilot-cmp",
-  -- 	after = { "copilot.lua", "nvim-cmp" },
-  -- },
+  { "AlexvZyl/nordic.nvim" },
   {
     'theprimeagen/harpoon',
     config = function()
