@@ -9,14 +9,14 @@ an executable
 
 -- TODO:
 -- consider also removing the buffer line???
+--
+
 
 vim.opt.expandtab = true
 
 lvim.builtin.nvimtree.setup.view.width = 79;
 
 lvim.builtin.telescope.defaults.path_display = { "truncate" }
-
-vim.keymap.set("n", "<LEADER>m", "<CMD>Telescope marks<CR>", { noremap = true, silent = true })
 
 -- general
 lvim.log.level = "warn"
@@ -65,8 +65,14 @@ lvim.builtin.telescope.defaults.layout_config = {
 -- lvim.builtin.theme.options.dim_inactive = true
 -- lvim.builtin.theme.options.style = "storm"
 
+vim.api.nvim_create_user_command('ToggleInlayHint', function()
+  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))
+end, {})
+
 -- Use which-key to add extra bindings with the leader-key prefix
-lvim.builtin.which_key.mappings["k"] = { "<cmd>Copilot panel<CR>", "Copilot panel" }
+lvim.builtin.which_key.mappings.l.h = { "<cmd>ToggleInlayHint<CR>", "Inlay Hints" }
+
+lvim.builtin.which_key.mappings["m"] = { "<cmd>Telescope marks<CR>", "Marks" }
 lvim.builtin.which_key.mappings["j"] = { "<cmd>Telescope projects<CR>", "Projects" }
 
 -- lvim.builtin.which_key.mappings["t"] = {
