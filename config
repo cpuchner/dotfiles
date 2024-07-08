@@ -30,6 +30,10 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 bindsym $mod+Control+l exec "i3lock -i /home/carl/Downloads/screensaver.png"
 
+no_focus [instance="ocamlgame"]
+for_window [instance="ocamlgame"] floating disable
+focus_on_window_activation none
+
 # Start the gnome keyring for chrome
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=secrets
 

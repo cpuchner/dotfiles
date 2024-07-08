@@ -119,7 +119,6 @@ lvim.builtin.treesitter.ensure_installed = {
   "elixir",
   "gleam",
 }
-
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.incremental_selection = {
@@ -129,6 +128,15 @@ lvim.builtin.treesitter.incremental_selection = {
     node_incremental = "<CR>",
     scope_incremental = "<TAB>",
     node_decremental = "<BS>",
+  },
+}
+lvim.builtin.treesitter.textobjects.swap = {
+  enable = true,
+  swap_next = {
+    ["<leader>z"] = "@parameter.inner",
+  },
+  swap_previous = {
+    ["<leader>Z"] = "@parameter.inner",
   },
 }
 
@@ -199,6 +207,7 @@ lvim.plugins = {
   { "rebelot/kanagawa.nvim" },
   { "folke/tokyonight.nvim" },
   { "AlexvZyl/nordic.nvim" },
+  { "nvim-treesitter/nvim-treesitter-textobjects" },
   {
     'theprimeagen/harpoon',
     config = function()
@@ -242,3 +251,4 @@ cmp.register_source("uuid", uuid)
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
+
