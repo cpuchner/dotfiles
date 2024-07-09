@@ -220,20 +220,19 @@ lvim.plugins = {
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require("harpoon").setup({
+      local harpoon = require("harpoon")
+
+      harpoon:setup({
         menu = {
           width = math.min(vim.api.nvim_win_get_width(0) - 4, 120),
         },
       })
 
-      local mark = require('harpoon.mark')
-      local ui = require('harpoon.ui')
+      lvim.builtin.which_key.mappings["a"] = { function() harpoon:list():add() end, "Harpoon mark" }
 
-      lvim.builtin.which_key.mappings["a"] = { mark.add_file, "Harpoon mark" }
-
-      vim.keymap.set("n", "<M-m>", ui.toggle_quick_menu)
-      vim.keymap.set("n", "<C-p>", function() ui.nav_prev() end)
-      vim.keymap.set("n", "<C-n>", function() ui.nav_next() end)
+      vim.keymap.set("n", "<M-m>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+      vim.keymap.set("n", "<C-p>", function() harpoon:list():prev() end)
+      vim.keymap.set("n", "<C-n>", function() harpoon:list():next() end)
     end,
   },
 }
