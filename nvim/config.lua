@@ -216,7 +216,9 @@ lvim.plugins = {
   },
   { "nvim-treesitter/nvim-treesitter-textobjects" },
   {
-    'theprimeagen/harpoon',
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require("harpoon").setup({
         menu = {
