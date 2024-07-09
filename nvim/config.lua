@@ -207,6 +207,13 @@ lvim.plugins = {
   { "rebelot/kanagawa.nvim" },
   { "folke/tokyonight.nvim" },
   { "AlexvZyl/nordic.nvim" },
+  {
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({})
+    end
+  },
   { "nvim-treesitter/nvim-treesitter-textobjects" },
   {
     'theprimeagen/harpoon',
@@ -251,4 +258,3 @@ cmp.register_source("uuid", uuid)
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
-
