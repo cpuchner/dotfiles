@@ -235,6 +235,49 @@ lvim.plugins = {
       vim.keymap.set("n", "<C-n>", function() harpoon:list():next() end)
     end,
   },
+  {
+    dir = '/home/carl/.config/lvim',
+    name = 'llm',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local system_prompt =
+        'You should replace the code that you are sent, only following the comments. Do not talk at all. Only output valid code. Do not provide any backticks that surround the code. Never ever output backticks like this ```. Any comment that is asking you for something should be removed after you satisfy them. Other comments should left alone. Do not output backticks'
+      local helpful_prompt = 'You are a helpful assistant. What I have sent are my notes so far. You are very curt, yet helpful.'
+
+      local llm = require('llm')
+
+      local function openai_replace()
+        llm.invoke_llm_and_stream_into_editor({
+          url = 'https://api.openai.com/v1/chat/completions',
+          model = 'gpt-4o',
+          api_key_name = 'OPENAI_API_KEY',
+          system_prompt = system_prompt,
+          replace = true,
+        }, llm.make_openai_spec_curl_args, llm.handle_openai_spec_data)
+      end
+
+      local function openai_help()
+        llm.invoke_llm_and_stream_into_editor({
+          url = 'https://api.openai.com/v1/chat/completions',
+          model = 'gpt-4o',
+          api_key_name = 'OPENAI_API_KEY',
+          system_prompt = helpful_prompt,
+          replace = false,
+        }, llm.make_openai_spec_curl_args, llm.handle_openai_spec_data)
+      end
+
+      lvim.builtin.which_key.vmappings["o"] = {
+        name = "open ai",
+        h = { function() openai_help() end, "llm help" },
+        r = { function() openai_replace() end, "References" },
+      }
+      lvim.builtin.which_key.mappings["o"] = {
+        name = "open ai",
+        h = { function() openai_help() end, "llm help" },
+        r = { function() openai_replace() end, "References" },
+      }
+    end,
+  },
 }
 
 lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
@@ -246,16 +289,3 @@ local cmp = require "cmp"
 local uuid = require "uuid"
 cmp.register_source("uuid", uuid)
 
--- Autocommands (https://neovim.io/doc/user/autocmd.html)
--- vim.api.nvim_create_autocmd("BufEnter", {
---   pattern = { "*.json", "*.jsonc" },
---   -- enable wrap mode for json files only
---   command = "setlocal wrap",
--- })
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "zsh",
---   callback = function()
---     -- let treesitter use bash highlight for zsh files as well
---     require("nvim-treesitter.highlight").attach(0, "bash")
---   end,
--- })
