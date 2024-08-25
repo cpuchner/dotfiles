@@ -24,7 +24,8 @@ lvim.format_on_save = false
 
 -- lvim.colorscheme = "kanagawa-dragon"
 -- lvim.colorscheme = "tokyonight-night"
-lvim.colorscheme = "nordic"
+-- lvim.colorscheme = "nordic"
+lvim.colorscheme = "nord"
 
 -- to disable icons and use a minimalist setup, uncomment the following
 lvim.use_icons = true
@@ -179,17 +180,21 @@ lvim.lsp.installer.setup.ensure_installed = {
 -- end
 
 -- -- set additional linters
--- local linters = require "lvim.lsp.null-ls.linters"
--- linters.setup {
---   { command = "eslint",
---     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
--- }
+local linters = require "lvim.lsp.null-ls.linters"
+linters.setup {
+  { command = "eslint_d",
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+}
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   { command = "black", filetypes = { "python" } },
   {
     command = "prettier",
     filetypes = { "html", "typescript", "typescriptreact", "javascript", "javascriptreact" }
+  },
+  {
+    command = "eslint_d",
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
   },
   -- {
   --   command = "dprint",
@@ -207,6 +212,13 @@ lvim.plugins = {
   { "rebelot/kanagawa.nvim" },
   { "folke/tokyonight.nvim" },
   { "AlexvZyl/nordic.nvim" },
+  { "shaunsingh/nord.nvim" },
+  { 
+    "dmmulroy/tsc.nvim",
+    config = function()
+      require('tsc').setup()
+    end
+  },
   {
     "kylechui/nvim-surround",
     event = "VeryLazy",
@@ -241,8 +253,9 @@ lvim.plugins = {
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       local system_prompt =
-        'You should replace the code that you are sent, only following the comments. Do not talk at all. Only output valid code. Do not provide any backticks that surround the code. Never ever output backticks like this ```. Any comment that is asking you for something should be removed after you satisfy them. Other comments should left alone. Do not output backticks'
-      local helpful_prompt = 'You are a helpful assistant. What I have sent are my notes so far. You are very curt, yet helpful.'
+      'You should replace the code that you are sent, only following the comments. Do not talk at all. Only output valid code. Do not provide any backticks that surround the code. Never ever output backticks like this ```. Any comment that is asking you for something should be removed after you satisfy them. Other comments should left alone. Do not output backticks'
+      local helpful_prompt =
+      'You are a helpful assistant. What I have sent are my notes so far. You are very curt, yet helpful.'
 
       local llm = require('llm')
 
@@ -269,12 +282,12 @@ lvim.plugins = {
       lvim.builtin.which_key.vmappings["o"] = {
         name = "open ai",
         h = { function() openai_help() end, "llm help" },
-        r = { function() openai_replace() end, "References" },
+        r = { function() openai_replace() end, "replace" },
       }
       lvim.builtin.which_key.mappings["o"] = {
         name = "open ai",
         h = { function() openai_help() end, "llm help" },
-        r = { function() openai_replace() end, "References" },
+        r = { function() openai_replace() end, "replace" },
       }
     end,
   },
@@ -288,4 +301,3 @@ table.insert(lvim.builtin.cmp.sources, 1, { name = "uuid" })
 local cmp = require "cmp"
 local uuid = require "uuid"
 cmp.register_source("uuid", uuid)
-
