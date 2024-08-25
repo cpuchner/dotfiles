@@ -10,7 +10,7 @@ an executable
 -- TODO:
 -- consider also removing the buffer line???
 --
-
+--
 
 vim.opt.expandtab = true
 
@@ -144,7 +144,7 @@ lvim.builtin.treesitter.textobjects.swap = {
 
 -- -- make sure server will always be installed even if the server is in skipped_servers list
 lvim.lsp.installer.setup.ensure_installed = {
-  "denols",
+  -- "denols",
 }
 -- -- change UI setting of `LspInstallInfo`
 -- -- see <https://github.com/williamboman/nvim-lsp-installer#default-configuration>
@@ -161,12 +161,12 @@ lvim.lsp.installer.setup.ensure_installed = {
 -- ---configure a server manually. !!Requires `:LvimCacheReset` to take effect!!
 -- ---see the full default list `:lua print(vim.inspect(lvim.lsp.automatic_configuration.skipped_servers))`
 
-vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tsserver" })
+-- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tsserver" })
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
 -- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
-lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
-  return server ~= "denols"
-end, lvim.lsp.automatic_configuration.skipped_servers)
+-- lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
+--   return server ~= "denols"
+-- end, lvim.lsp.automatic_configuration.skipped_servers)
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
 -- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
@@ -179,11 +179,11 @@ end, lvim.lsp.automatic_configuration.skipped_servers)
 -- end
 
 -- -- set additional linters
-local linters = require "lvim.lsp.null-ls.linters"
-linters.setup {
-  { command = "eslint",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
-}
+-- local linters = require "lvim.lsp.null-ls.linters"
+-- linters.setup {
+--   { command = "eslint",
+--     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+-- }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   { command = "black", filetypes = { "python" } },
