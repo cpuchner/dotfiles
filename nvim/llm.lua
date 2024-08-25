@@ -92,13 +92,13 @@ function M.make_openai_spec_curl_args(opts, prompt, system_prompt)
   return args
 end
 
-function M.write_string_at_extmark(str, extmark_id)
+function M.write_string_at_extmark(str, extmark_id, buffer)
   vim.schedule(function()
-    local extmark = vim.api.nvim_buf_get_extmark_by_id(0, ns_id, extmark_id, { details = false })
+    local extmark = vim.api.nvim_buf_get_extmark_by_id(buffer, ns_id, extmark_id, { details = false })
     local row, col = extmark[1], extmark[2]
-    vim.cmd "undojoin"
+
     local lines = vim.split(str, '\n')
-    vim.api.nvim_buf_set_text(0, row, col, row, col, lines)
+    vim.api.nvim_buf_set_text(buffer, row, col, row, col, lines)
   end)
 end
 
@@ -121,22 +121,22 @@ local function get_prompt(opts)
   return prompt
 end
 
-function M.handle_anthropic_spec_data(data_stream, event_state, extmark_id)
+function M.handle_anthropic_spec_data(data_stream, event_state, extmark_id, buffer)
   if event_state == 'content_block_delta' then
     local json = vim.json.decode(data_stream)
     if json.delta and json.delta.text then
-      M.write_string_at_extmark(json.delta.text, extmark_id)
+      M.write_string_at_extmark(json.delta.text, extmark_id, buffer)
     end
   end
 end
 
-function M.handle_openai_spec_data(data_stream, _event_state, extmark_id)
+function M.handle_openai_spec_data(data_stream, _event_state, extmark_id, buffer)
   if data_stream:match '"delta":' then
     local json = vim.json.decode(data_stream)
     if json.choices and json.choices[1] and json.choices[1].delta then
       local content = json.choices[1].delta.content
       if content then
-        M.write_string_at_extmark(content, extmark_id)
+        M.write_string_at_extmark(content, extmark_id, buffer)
       end
     end
   end
@@ -153,7 +153,8 @@ function M.invoke_llm_and_stream_into_editor(opts, make_curl_args_fn, handle_dat
   local args = make_curl_args_fn(opts, prompt, system_prompt)
   local curr_event_state = nil
   local crow, _ = unpack(vim.api.nvim_win_get_cursor(0))
-  local stream_end_extmark_id = vim.api.nvim_buf_set_extmark(0, ns_id, crow - 1, -1, {})
+  local current_buffer = vim.api.nvim_get_current_buf()
+  local stream_end_extmark_id = vim.api.nvim_buf_set_extmark(current_buffer, ns_id, crow - 1, -1, {})
 
   local function parse_and_call(line)
     local event = line:match '^event: (.+)$'
@@ -163,7 +164,7 @@ function M.invoke_llm_and_stream_into_editor(opts, make_curl_args_fn, handle_dat
     end
     local data_match = line:match '^data: (.+)$'
     if data_match then
-      handle_data_fn(data_match, curr_event_state, stream_end_extmark_id)
+      handle_data_fn(data_match, curr_event_state, stream_end_extmark_id, current_buffer)
     end
   end
 
