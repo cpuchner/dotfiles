@@ -162,7 +162,7 @@ lvim.lsp.installer.setup.ensure_installed = {
 -- ---configure a server manually. !!Requires `:LvimCacheReset` to take effect!!
 -- ---see the full default list `:lua print(vim.inspect(lvim.lsp.automatic_configuration.skipped_servers))`
 
--- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tsserver" })
+vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tsserver" })
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
 -- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
 -- lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
@@ -171,12 +171,25 @@ lvim.lsp.installer.setup.ensure_installed = {
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
 -- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
+
+local nvim_lsp = require('lspconfig')
+nvim_lsp.denols.setup {
+  root_dir = nvim_lsp.util.root_pattern("deno.json"),
+}
+nvim_lsp.tsserver.setup {
+  root_dir = nvim_lsp.util.root_pattern("package.json"),
+  single_file_support = false
+}
+
+-- Not quite as nice as just starting based on root pattern
 -- lvim.lsp.on_attach_callback = function(client, bufnr)
---   local function buf_set_option(...)
---     vim.api.nvim_buf_set_option(bufnr, ...)
+--   local nvim_lsp = require("lspconfig")
+--   if nvim_lsp.util.root_pattern("deno.json", "import_map.json")(vim.fn.getcwd()) then
+--       if client.name == "tsserver" then
+--           client.stop()
+--           return
+--       end
 --   end
---   --Enable completion triggered by <c-x><c-o>
---   buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
 -- end
 
 -- -- set additional linters
@@ -281,12 +294,12 @@ lvim.plugins = {
 
       lvim.builtin.which_key.vmappings["o"] = {
         name = "open ai",
-        h = { function() openai_help() end, "llm help" },
+        h = { function() openai_help() end, "help" },
         r = { function() openai_replace() end, "replace" },
       }
       lvim.builtin.which_key.mappings["o"] = {
         name = "open ai",
-        h = { function() openai_help() end, "llm help" },
+        h = { function() openai_help() end, "help" },
         r = { function() openai_replace() end, "replace" },
       }
     end,
