@@ -30,10 +30,6 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 bindsym $mod+Control+l exec "i3lock -i /home/carl/Downloads/screensaver.png"
 
-no_focus [instance="ocamlgame"]
-for_window [instance="ocamlgame"] floating disable
-focus_on_window_activation none
-
 # Start the gnome keyring for chrome
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=secrets
 
@@ -91,11 +87,11 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# split in horizontal orientation
-bindsym $mod+Shift+x split h
+# split vertically
+bindsym $mod+Shift+s split v
 
-# split in vertical orientation
-bindsym $mod+Shift+v split v
+# split horisontally
+bindsym $mod+Shift+v split h
 
 # enter fullscreen mode for the focused container
 bindsym Mod1+f fullscreen toggle

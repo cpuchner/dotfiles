@@ -205,10 +205,10 @@ formatters.setup {
     command = "prettier",
     filetypes = { "html", "typescript", "typescriptreact", "javascript", "javascriptreact" }
   },
-  {
-    command = "eslint_d",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-  },
+  -- {
+  --   command = "eslint_d",
+  --   filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+  -- },
   -- {
   --   command = "dprint",
   --   filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact"  }
