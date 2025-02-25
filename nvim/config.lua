@@ -226,7 +226,7 @@ lvim.plugins = {
   { "folke/tokyonight.nvim" },
   { "AlexvZyl/nordic.nvim" },
   { "shaunsingh/nord.nvim" },
-  { 
+  {
     "dmmulroy/tsc.nvim",
     config = function()
       require('tsc').setup()
@@ -272,6 +272,20 @@ lvim.plugins = {
 
       local llm = require('llm')
 
+      local function claude_replace()
+        llm.invoke_llm_and_stream_into_editor(
+          {
+            url = 'https://api.anthropic.com/v1/messages',
+            model = 'claude-3-5-sonnet-20241022', -- TODO: use 3.7
+            api_key_name = 'CLAUDE_API_KEY',
+            system_prompt = system_prompt,
+            replace = true,
+          },
+          llm.make_anthropic_spec_curl_args,
+          llm.handle_anthropic_spec_data
+        )
+      end
+
       local function openai_replace()
         llm.invoke_llm_and_stream_into_editor({
           url = 'https://api.openai.com/v1/chat/completions',
@@ -295,12 +309,14 @@ lvim.plugins = {
       lvim.builtin.which_key.vmappings["o"] = {
         name = "open ai",
         h = { function() openai_help() end, "help" },
-        r = { function() openai_replace() end, "replace" },
+        o = { function() openai_replace() end, "openai-replace" },
+        r = { function() claude_replace() end, "claude-replace" },
       }
       lvim.builtin.which_key.mappings["o"] = {
         name = "open ai",
         h = { function() openai_help() end, "help" },
-        r = { function() openai_replace() end, "replace" },
+        o = { function() openai_replace() end, "openai-replace" },
+        r = { function() claude_replace() end, "claude-replace" },
       }
     end,
   },
