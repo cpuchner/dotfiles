@@ -71,6 +71,8 @@ vim.api.nvim_create_user_command('ToggleInlayHint', function()
 end, {})
 
 -- Use which-key to add extra bindings with the leader-key prefix
+lvim.builtin.which_key.mappings.g.h = { desc = "Open in github" }
+
 lvim.builtin.which_key.mappings.l.h = { "<cmd>ToggleInlayHint<CR>", "Inlay Hints" }
 
 lvim.builtin.which_key.mappings["m"] = { "<cmd>Telescope marks<CR>", "Marks" }
@@ -145,7 +147,7 @@ lvim.builtin.treesitter.textobjects.swap = {
 
 -- -- make sure server will always be installed even if the server is in skipped_servers list
 lvim.lsp.installer.setup.ensure_installed = {
-  -- "denols",
+  "biome",
 }
 -- -- change UI setting of `LspInstallInfo`
 -- -- see <https://github.com/williamboman/nvim-lsp-installer#default-configuration>
@@ -165,9 +167,9 @@ lvim.lsp.installer.setup.ensure_installed = {
 vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tsserver" })
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
 -- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
--- lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
---   return server ~= "denols"
--- end, lvim.lsp.automatic_configuration.skipped_servers)
+lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
+  return server ~= "biome"
+end, lvim.lsp.automatic_configuration.skipped_servers)
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
 -- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
@@ -193,17 +195,21 @@ nvim_lsp.tsserver.setup {
 -- end
 
 -- -- set additional linters
-local linters = require "lvim.lsp.null-ls.linters"
-linters.setup {
-  { command = "eslint_d",
-    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
-}
+-- local linters = require "lvim.lsp.null-ls.linters"
+-- linters.setup {
+--   { command = "eslint_d",
+--     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
+-- }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   { command = "black", filetypes = { "python" } },
   {
     command = "prettier",
-    filetypes = { "html", "typescript", "typescriptreact", "javascript", "javascriptreact" }
+    filetypes = { "html", "typescriptreact", "javascriptreact" }
+  },
+  {
+    command = "biome",
+    filetypes = { "typescript", "javascript" }
   },
   -- {
   --   command = "eslint_d",
@@ -232,6 +238,7 @@ lvim.plugins = {
       require('tsc').setup()
     end
   },
+  { "ruanyl/vim-gh-line" },
   {
     "kylechui/nvim-surround",
     event = "VeryLazy",
