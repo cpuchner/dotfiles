@@ -12,7 +12,7 @@ an executable
 --
 --
 
-vim.opt.expandtab = true
+vim.opt.expandtab = false
 
 lvim.builtin.nvimtree.setup.view.width = 79;
 
