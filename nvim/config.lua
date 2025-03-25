@@ -148,6 +148,7 @@ lvim.builtin.treesitter.textobjects.swap = {
 -- -- make sure server will always be installed even if the server is in skipped_servers list
 lvim.lsp.installer.setup.ensure_installed = {
   "biome",
+  "denols",
 }
 -- -- change UI setting of `LspInstallInfo`
 -- -- see <https://github.com/williamboman/nvim-lsp-installer#default-configuration>
@@ -168,7 +169,7 @@ vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tsserver" }
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
 -- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
 lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
-  return server ~= "biome"
+  return server ~= "biome" and server ~= "denols"
 end, lvim.lsp.automatic_configuration.skipped_servers)
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
@@ -224,6 +225,41 @@ formatters.setup {
     filetypes = { "ocaml" }
   }
 }
+
+local null_ls = require("null-ls")
+
+local no_really = {
+  name = "carl_source",
+  method = null_ls.methods.DIAGNOSTICS,
+  filetypes = { "go" },
+  generator = {
+    fn = function(params)
+      local diagnostics = {}
+
+      for i, line in ipairs(params.content) do
+        local col, end_col = line:find("Id")
+        if col and end_col then
+          table.insert(diagnostics, {
+            row = i,
+            col = col,
+            end_col = end_col + 1,
+            source = "no-Id",
+            message = "should this be capitalised?",
+            severity = vim.diagnostic.severity.INFO,
+          })
+        end
+      end
+
+      return diagnostics
+    end,
+  },
+}
+
+
+if not null_ls.is_registered(no_really)
+then
+  null_ls.register(no_really)
+end
 
 -- Additional Plugins
 lvim.plugins = {
