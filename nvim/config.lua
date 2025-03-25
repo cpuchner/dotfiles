@@ -45,7 +45,7 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- local _, actions = pcall(require, "telescope.actions")
 lvim.builtin.telescope.defaults.layout_strategy = "vertical"
 lvim.builtin.telescope.defaults.layout_config = {
-  vertical = { width = 0.8, height = 0.8, prompt_position = "top", preview_height = 0.6 }
+	vertical = { width = 0.8, height = 0.8, prompt_position = "top", preview_height = 0.6 }
 }
 -- lvim.builtin.telescope.defaults.mappings = {
 --   -- for input mode
@@ -67,7 +67,7 @@ lvim.builtin.telescope.defaults.layout_config = {
 -- lvim.builtin.theme.options.style = "storm"
 
 vim.api.nvim_create_user_command('ToggleInlayHint', function()
-  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))
+	vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = 0 }))
 end, {})
 
 -- Use which-key to add extra bindings with the leader-key prefix
@@ -98,57 +98,57 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
 lvim.builtin.nvimtree.setup.sync_root_with_cwd = true
 lvim.builtin.nvimtree.setup.respect_buf_cwd = true
 lvim.builtin.nvimtree.setup.update_focused_file = {
-  enable = true,
-  update_root = true
+	enable = true,
+	update_root = true
 }
 -- lvim.builtin.project.patterns = { ".git", "project.json", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" }
 lvim.builtin.project.patterns = { ".git" }
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
-  "bash",
-  "c",
-  "javascript",
-  "json",
-  "lua",
-  "sql",
-  "python",
-  "typescript",
-  "tsx",
-  "css",
-  "rust",
-  "java",
-  "yaml",
-  "elixir",
-  "gleam",
+	"bash",
+	"c",
+	"javascript",
+	"json",
+	"lua",
+	"sql",
+	"python",
+	"typescript",
+	"tsx",
+	"css",
+	"rust",
+	"java",
+	"yaml",
+	"elixir",
+	"gleam",
 }
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.incremental_selection = {
-  enable = true,
-  keymaps = {
-    init_selection = "<CR>",
-    node_incremental = "<CR>",
-    scope_incremental = "<TAB>",
-    node_decremental = "<BS>",
-  },
+	enable = true,
+	keymaps = {
+		init_selection = "<CR>",
+		node_incremental = "<CR>",
+		scope_incremental = "<TAB>",
+		node_decremental = "<BS>",
+	},
 }
 lvim.builtin.treesitter.textobjects.swap = {
-  enable = true,
-  swap_next = {
-    ["<leader>z"] = "@parameter.inner",
-  },
-  swap_previous = {
-    ["<leader>Z"] = "@parameter.inner",
-  },
+	enable = true,
+	swap_next = {
+		["<leader>z"] = "@parameter.inner",
+	},
+	swap_previous = {
+		["<leader>Z"] = "@parameter.inner",
+	},
 }
 
 -- generic LSP settings
 
 -- -- make sure server will always be installed even if the server is in skipped_servers list
 lvim.lsp.installer.setup.ensure_installed = {
-  "biome",
-  "denols",
+	"biome",
+	"denols",
 }
 -- -- change UI setting of `LspInstallInfo`
 -- -- see <https://github.com/williamboman/nvim-lsp-installer#default-configuration>
@@ -169,7 +169,7 @@ vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tsserver" }
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
 -- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
 lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
-  return server ~= "biome" and server ~= "denols"
+	return server ~= "biome" and server ~= "denols"
 end, lvim.lsp.automatic_configuration.skipped_servers)
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
@@ -177,11 +177,11 @@ end, lvim.lsp.automatic_configuration.skipped_servers)
 
 local nvim_lsp = require('lspconfig')
 nvim_lsp.denols.setup {
-  root_dir = nvim_lsp.util.root_pattern("deno.json"),
+	root_dir = nvim_lsp.util.root_pattern("deno.json"),
 }
 nvim_lsp.tsserver.setup {
-  root_dir = nvim_lsp.util.root_pattern("package.json"),
-  single_file_support = false
+	root_dir = nvim_lsp.util.root_pattern("package.json"),
+	single_file_support = false
 }
 
 -- Not quite as nice as just starting based on root pattern
@@ -203,166 +203,166 @@ nvim_lsp.tsserver.setup {
 -- }
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-  { command = "black", filetypes = { "python" } },
-  {
-    command = "prettier",
-    filetypes = { "html", "typescriptreact", "javascriptreact" }
-  },
-  {
-    command = "biome",
-    filetypes = { "typescript", "javascript" }
-  },
-  -- {
-  --   command = "eslint_d",
-  --   filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-  -- },
-  -- {
-  --   command = "dprint",
-  --   filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact"  }
-  -- },
-  {
-    command = "ocamlformat",
-    filetypes = { "ocaml" }
-  }
+	{ command = "black", filetypes = { "python" } },
+	{
+		command = "prettier",
+		filetypes = { "html", "typescriptreact", "javascriptreact" }
+	},
+	{
+		command = "biome",
+		filetypes = { "typescript", "javascript" }
+	},
+	-- {
+	--   command = "eslint_d",
+	--   filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+	-- },
+	-- {
+	--   command = "dprint",
+	--   filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact"  }
+	-- },
+	{
+		command = "ocamlformat",
+		filetypes = { "ocaml" }
+	}
 }
 
 local null_ls = require("null-ls")
 
-local no_really = {
-  name = "carl_source",
-  method = null_ls.methods.DIAGNOSTICS,
-  filetypes = { "go" },
-  generator = {
-    fn = function(params)
-      local diagnostics = {}
+local go_abbreviations = {
+	name = "carl_source",
+	method = null_ls.methods.DIAGNOSTICS,
+	filetypes = { "go" },
+	generator = {
+		fn = function(params)
+			local diagnostics = {}
 
-      for i, line in ipairs(params.content) do
-        local col, end_col = line:find("Id")
-        if col and end_col then
-          table.insert(diagnostics, {
-            row = i,
-            col = col,
-            end_col = end_col + 1,
-            source = "no-Id",
-            message = "should this be capitalised?",
-            severity = vim.diagnostic.severity.INFO,
-          })
-        end
-      end
+			for i, line in ipairs(params.content) do
+				local col, end_col = line:find("Id")
+				if col and end_col then
+					table.insert(diagnostics, {
+						row = i,
+						col = col,
+						end_col = end_col + 1,
+						source = "no-Id",
+						message = "should this be capitalised?",
+						severity = vim.diagnostic.severity.INFO,
+					})
+				end
+			end
 
-      return diagnostics
-    end,
-  },
+			return diagnostics
+		end,
+	},
 }
 
 
-if not null_ls.is_registered(no_really)
+if not null_ls.is_registered(go_abbreviations)
 then
-  null_ls.register(no_really)
+	null_ls.register(go_abbreviations)
 end
 
 -- Additional Plugins
 lvim.plugins = {
-  { "lunarvim/colorschemes" },
-  { "rebelot/kanagawa.nvim" },
-  { "folke/tokyonight.nvim" },
-  { "AlexvZyl/nordic.nvim" },
-  { "shaunsingh/nord.nvim" },
-  {
-    "dmmulroy/tsc.nvim",
-    config = function()
-      require('tsc').setup()
-    end
-  },
-  { "ruanyl/vim-gh-line" },
-  {
-    "kylechui/nvim-surround",
-    event = "VeryLazy",
-    config = function()
-      require("nvim-surround").setup({})
-    end
-  },
-  { "nvim-treesitter/nvim-treesitter-textobjects" },
-  {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      local harpoon = require("harpoon")
+	{ "lunarvim/colorschemes" },
+	{ "rebelot/kanagawa.nvim" },
+	{ "folke/tokyonight.nvim" },
+	{ "AlexvZyl/nordic.nvim" },
+	{ "shaunsingh/nord.nvim" },
+	{
+		"dmmulroy/tsc.nvim",
+		config = function()
+			require('tsc').setup()
+		end
+	},
+	{ "ruanyl/vim-gh-line" },
+	{
+		"kylechui/nvim-surround",
+		event = "VeryLazy",
+		config = function()
+			require("nvim-surround").setup({})
+		end
+	},
+	{ "nvim-treesitter/nvim-treesitter-textobjects" },
+	{
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			local harpoon = require("harpoon")
 
-      harpoon:setup({
-        menu = {
-          width = math.min(vim.api.nvim_win_get_width(0) - 4, 120),
-        },
-      })
+			harpoon:setup({
+				menu = {
+					width = math.min(vim.api.nvim_win_get_width(0) - 4, 120),
+				},
+			})
 
-      lvim.builtin.which_key.mappings["a"] = { function() harpoon:list():add() end, "Harpoon mark" }
+			lvim.builtin.which_key.mappings["a"] = { function() harpoon:list():add() end, "Harpoon mark" }
 
-      vim.keymap.set("n", "<M-m>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-      vim.keymap.set("n", "<C-p>", function() harpoon:list():prev() end)
-      vim.keymap.set("n", "<C-n>", function() harpoon:list():next() end)
-    end,
-  },
-  {
-    dir = '/home/carl/.config/lvim',
-    name = 'llm',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    config = function()
-      local system_prompt =
-      'You should replace the code that you are sent, only following the comments. Do not talk at all. Only output valid code. Do not provide any backticks that surround the code. Never ever output backticks like this ```. Any comment that is asking you for something should be removed after you satisfy them. Other comments should left alone. Do not output backticks'
-      local helpful_prompt =
-      'You are a helpful assistant. What I have sent are my notes so far. You are very curt, yet helpful.'
+			vim.keymap.set("n", "<M-m>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+			vim.keymap.set("n", "<C-p>", function() harpoon:list():prev() end)
+			vim.keymap.set("n", "<C-n>", function() harpoon:list():next() end)
+		end,
+	},
+	{
+		dir = '/home/carl/.config/lvim',
+		name = 'llm',
+		dependencies = { 'nvim-lua/plenary.nvim' },
+		config = function()
+			local system_prompt =
+			'You should replace the code that you are sent, only following the comments. Do not talk at all. Only output valid code. Do not provide any backticks that surround the code. Never ever output backticks like this ```. Any comment that is asking you for something should be removed after you satisfy them. Other comments should left alone. Do not output backticks'
+			local helpful_prompt =
+			'You are a helpful assistant. What I have sent are my notes so far. You are very curt, yet helpful.'
 
-      local llm = require('llm')
+			local llm = require('llm')
 
-      local function claude_replace()
-        llm.invoke_llm_and_stream_into_editor(
-          {
-            url = 'https://api.anthropic.com/v1/messages',
-            model = 'claude-3-5-sonnet-20241022', -- TODO: use 3.7
-            api_key_name = 'CLAUDE_API_KEY',
-            system_prompt = system_prompt,
-            replace = true,
-          },
-          llm.make_anthropic_spec_curl_args,
-          llm.handle_anthropic_spec_data
-        )
-      end
+			local function claude_replace()
+				llm.invoke_llm_and_stream_into_editor(
+					{
+						url = 'https://api.anthropic.com/v1/messages',
+						model = 'claude-3-5-sonnet-20241022', -- TODO: use 3.7
+						api_key_name = 'CLAUDE_API_KEY',
+						system_prompt = system_prompt,
+						replace = true,
+					},
+					llm.make_anthropic_spec_curl_args,
+					llm.handle_anthropic_spec_data
+				)
+			end
 
-      local function openai_replace()
-        llm.invoke_llm_and_stream_into_editor({
-          url = 'https://api.openai.com/v1/chat/completions',
-          model = 'gpt-4o',
-          api_key_name = 'OPENAI_API_KEY',
-          system_prompt = system_prompt,
-          replace = true,
-        }, llm.make_openai_spec_curl_args, llm.handle_openai_spec_data)
-      end
+			local function openai_replace()
+				llm.invoke_llm_and_stream_into_editor({
+					url = 'https://api.openai.com/v1/chat/completions',
+					model = 'gpt-4o',
+					api_key_name = 'OPENAI_API_KEY',
+					system_prompt = system_prompt,
+					replace = true,
+				}, llm.make_openai_spec_curl_args, llm.handle_openai_spec_data)
+			end
 
-      local function openai_help()
-        llm.invoke_llm_and_stream_into_editor({
-          url = 'https://api.openai.com/v1/chat/completions',
-          model = 'gpt-4o',
-          api_key_name = 'OPENAI_API_KEY',
-          system_prompt = helpful_prompt,
-          replace = false,
-        }, llm.make_openai_spec_curl_args, llm.handle_openai_spec_data)
-      end
+			local function openai_help()
+				llm.invoke_llm_and_stream_into_editor({
+					url = 'https://api.openai.com/v1/chat/completions',
+					model = 'gpt-4o',
+					api_key_name = 'OPENAI_API_KEY',
+					system_prompt = helpful_prompt,
+					replace = false,
+				}, llm.make_openai_spec_curl_args, llm.handle_openai_spec_data)
+			end
 
-      lvim.builtin.which_key.vmappings["o"] = {
-        name = "open ai",
-        h = { function() openai_help() end, "help" },
-        o = { function() openai_replace() end, "openai-replace" },
-        r = { function() claude_replace() end, "claude-replace" },
-      }
-      lvim.builtin.which_key.mappings["o"] = {
-        name = "open ai",
-        h = { function() openai_help() end, "help" },
-        o = { function() openai_replace() end, "openai-replace" },
-        r = { function() claude_replace() end, "claude-replace" },
-      }
-    end,
-  },
+			lvim.builtin.which_key.vmappings["o"] = {
+				name = "open ai",
+				h = { function() openai_help() end, "help" },
+				o = { function() openai_replace() end, "openai-replace" },
+				r = { function() claude_replace() end, "claude-replace" },
+			}
+			lvim.builtin.which_key.mappings["o"] = {
+				name = "open ai",
+				h = { function() openai_help() end, "help" },
+				o = { function() openai_replace() end, "openai-replace" },
+				r = { function() claude_replace() end, "claude-replace" },
+			}
+		end,
+	},
 }
 
 lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
