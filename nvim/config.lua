@@ -228,37 +228,64 @@ formatters.setup {
 
 local null_ls = require("null-ls")
 
-local go_abbreviations = {
-	name = "carl_source",
+local go_new = {
+	name = "carl-test",
 	method = null_ls.methods.DIAGNOSTICS,
 	filetypes = { "go" },
 	generator = {
 		fn = function(params)
+			local bufnr = params.bufnr
+
+			local parser = vim.treesitter.get_parser(bufnr)
+			if not parser then
+				vim.lsp.log.error("No treesitter parser found")
+				return {}
+			end
+
+			local tree = parser:trees()[1]
+			if not tree then
+				vim.lsp.log.error("No syntax tree found")
+				return {}
+			end
+
+			local root = tree:root()
+			print("Root node type:", root:type())
+
+
 			local diagnostics = {}
 
-			for i, line in ipairs(params.content) do
-				local col, end_col = line:find("Id")
-				if col and end_col then
-					table.insert(diagnostics, {
-						row = i,
-						col = col,
-						end_col = end_col + 1,
-						source = "no-Id",
-						message = "should this be capitalised?",
-						severity = vim.diagnostic.severity.INFO,
-					})
+			local function check_node(node)
+				if node:type() == "identifier" then
+					local text = vim.treesitter.get_node_text(node, bufnr)
+					if text:find("Id") then
+						local start_row, start_col, end_row, end_col = node:range()
+						table.insert(diagnostics, {
+							row = start_row + 1,
+							col = start_col,
+							end_row = end_row + 1,
+							end_col = end_col,
+							source = "IdVariableCheck",
+							message = "Variable name contains 'Id', consider renaming",
+							severity = vim.diagnostic.severity.INFO
+						})
+					end
+				end
+
+				for child in node:iter_children() do
+					check_node(child)
 				end
 			end
 
+			check_node(root)
+
 			return diagnostics
-		end,
-	},
+		end
+	}
 }
 
-
-if not null_ls.is_registered(go_abbreviations)
+if not null_ls.is_registered(go_new)
 then
-	null_ls.register(go_abbreviations)
+	null_ls.register(go_new)
 end
 
 -- Additional Plugins

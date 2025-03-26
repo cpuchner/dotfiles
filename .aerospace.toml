@@ -20,8 +20,8 @@ cmd-shift-l = 'move right'
 
 alt-f = 'fullscreen'
 
-cmd-shift-s = 'split horizontal'
-cmd-shift-v = 'split vertical'
+cmd-shift-s = 'split vertical'
+cmd-shift-v = 'split horizontal'
 
 alt-s = 'layout v_accordion' # 'layout stacking' in i3
 alt-w = 'layout h_accordion' # 'layout tabbed' in i3
