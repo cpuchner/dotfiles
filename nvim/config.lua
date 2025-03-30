@@ -47,6 +47,56 @@ lvim.builtin.telescope.defaults.layout_strategy = "vertical"
 lvim.builtin.telescope.defaults.layout_config = {
 	vertical = { width = 0.8, height = 0.8, prompt_position = "top", preview_height = 0.6 }
 }
+
+lvim.builtin.cmp.formatting.format = function(entry, vim_item)
+	local max_width = lvim.builtin.cmp.formatting.max_width
+	if max_width ~= 0 and #vim_item.abbr > max_width then
+		vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. lvim.icons.ui.Ellipsis
+	end
+	if lvim.use_icons then
+		vim_item.kind = lvim.builtin.cmp.formatting.kind_icons[vim_item.kind]
+
+		if entry.source.name == "copilot" then
+			vim_item.kind = lvim.icons.git.Octoface
+			vim_item.kind_hl_group = "CmpItemKindCopilot"
+		end
+
+		if entry.source.name == "cmp_tabnine" then
+			vim_item.kind = lvim.icons.misc.Robot
+			vim_item.kind_hl_group = "CmpItemKindTabnine"
+		end
+
+		if entry.source.name == "crates" then
+			vim_item.kind = lvim.icons.misc.Package
+			vim_item.kind_hl_group = "CmpItemKindCrate"
+		end
+
+		if entry.source.name == "lab.quick_data" then
+			vim_item.kind = lvim.icons.misc.CircuitBoard
+			vim_item.kind_hl_group = "CmpItemKindConstant"
+		end
+
+		if entry.source.name == "emoji" then
+			vim_item.kind = lvim.icons.misc.Smiley
+			vim_item.kind_hl_group = "CmpItemKindEmoji"
+		end
+	end
+	vim_item.menu = lvim.builtin.cmp.formatting.source_names[entry.source.name]
+	vim_item.dup = lvim.builtin.cmp.formatting.duplicates[entry.source.name]
+			or lvim.builtin.cmp.formatting.duplicates_default
+
+	local item = entry.completion_item
+	local details = nil
+	if item and item.labelDetails then
+		details = item.labelDetails.description
+	end
+	if details and details ~= "" then
+		vim_item.menu = (vim_item.menu or "") .. " " .. details
+	end
+
+	return vim_item
+end
+
 -- lvim.builtin.telescope.defaults.mappings = {
 --   -- for input mode
 --   i = {
@@ -186,8 +236,8 @@ nvim_lsp.postgres_lsp.setup {
 	cmd = { "postgrestools", "lsp-proxy" },
 	filetypes = { "sql" },
 	root_dir = function(fname)
-    return vim.fs.root(fname, { 'postgrestools.jsonc' })
-  end,
+		return vim.fs.root(fname, { 'postgrestools.jsonc' })
+	end,
 	single_file_support = true,
 }
 
@@ -446,6 +496,41 @@ lvim.plugins = {
 	},
 }
 
+vim.api.nvim_create_autocmd("InsertEnter", {
+	group = vim.api.nvim_create_augroup("otter-autostart", { clear = true }),
+	pattern = { "*.go" },
+	callback = function(opts)
+		local bufnr = opts.buf
+
+		local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
+		if not ok then
+			vim.notify("No treesitter parser available for buffer")
+			return
+		end
+
+		vim.notify("Have parser, checking language")
+
+		local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+		line = line - 1
+
+		local lang_tree = parser:language_for_range({ line, col, line, col + 1 })
+		vim.notify(vim.inspect(lang_tree:lang()))
+		if not lang_tree then
+			vim.notify("No language tree at cursor position")
+			return
+		end
+
+		local lang = lang_tree:lang()
+		vim.notify("Language detected: " .. lang)
+
+		local otter = require("otter")
+		local extensions = require("otter.tools.extensions")
+
+		if extensions[lang] then
+			otter.activate()
+		end
+	end
+})
 
 existing_o_mappings.a = { "<cmd>lua require('otter').activate()<CR>", "Otter Activate" }
 
