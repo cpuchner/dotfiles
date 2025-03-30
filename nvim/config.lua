@@ -202,8 +202,12 @@ nvim_lsp.tsserver.setup {
 nvim_lsp.postgres_lsp.setup {
 	cmd = { "postgrestools", "lsp-proxy" },
 	filetypes = { "sql" },
+	root_dir = function(fname)
+    return vim.fs.root(fname, { 'postgrestools.jsonc' })
+  end,
 	single_file_support = true,
 }
+
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
 -- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
