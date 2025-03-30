@@ -158,6 +158,24 @@ lvim.lsp.installer.setup.ensure_installed = {
 --     uninstall_server = "d",
 --     toggle_server_expand = "o",
 -- }
+--
+
+-- local opts = {
+-- 	cmd = { 'postgrestools', 'lsp-proxy' },
+-- 	filetypes = {
+-- 		'sql',
+-- 	},
+-- 	root_dir = vim.fs.root(0, { 'postgrestools.jsonc' }),
+-- 	single_file_support = true,
+-- 	docs = {
+-- 		description = [[
+-- https://pgtools.dev
+
+-- A collection of language tools and a Language Server Protocol (LSP) implementation for Postgres, focusing on developer experience and reliable SQL tooling.
+--         ]],
+-- 	}
+-- }
+-- require("lvim.lsp.manager").setup("postgres_lsp", opts)
 
 -- ---@usage disable automatic installation of servers
 -- lvim.lsp.installer.setup.automatic_installation = false
@@ -172,8 +190,6 @@ lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(serve
 	return server ~= "biome" and server ~= "denols"
 end, lvim.lsp.automatic_configuration.skipped_servers)
 
--- -- you can set a custom on_attach function that will be used for all the language servers
--- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
 
 local nvim_lsp = require('lspconfig')
 nvim_lsp.denols.setup {
@@ -183,7 +199,14 @@ nvim_lsp.tsserver.setup {
 	root_dir = nvim_lsp.util.root_pattern("package.json"),
 	single_file_support = false
 }
+nvim_lsp.postgres_lsp.setup {
+	cmd = { "postgrestools", "lsp-proxy" },
+	filetypes = { "sql" },
+	single_file_support = true,
+}
 
+-- -- you can set a custom on_attach function that will be used for all the language servers
+-- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
 -- Not quite as nice as just starting based on root pattern
 -- lvim.lsp.on_attach_callback = function(client, bufnr)
 --   local nvim_lsp = require("lspconfig")
@@ -226,67 +249,75 @@ formatters.setup {
 	}
 }
 
-local null_ls = require("null-ls")
+-- local null_ls = require("null-ls")
 
-local go_new = {
-	name = "carl-test",
-	method = null_ls.methods.DIAGNOSTICS,
-	filetypes = { "go" },
-	generator = {
-		fn = function(params)
-			local bufnr = params.bufnr
+-- local go_new = {
+-- 	name = "carl-test",
+-- 	method = null_ls.methods.DIAGNOSTICS,
+-- 	filetypes = { "go" },
+-- 	generator = {
+-- 		fn = function(params)
+-- 			local bufnr = params.bufnr
 
-			local parser = vim.treesitter.get_parser(bufnr)
-			if not parser then
-				vim.lsp.log.error("No treesitter parser found")
-				return {}
-			end
+-- 			local parser = vim.treesitter.get_parser(bufnr)
+-- 			if not parser then
+-- 				vim.lsp.log.error("No treesitter parser found")
+-- 				return {}
+-- 			end
 
-			local tree = parser:trees()[1]
-			if not tree then
-				vim.lsp.log.error("No syntax tree found")
-				return {}
-			end
+-- 			local tree = parser:trees()[1]
+-- 			if not tree then
+-- 				vim.lsp.log.error("No syntax tree found")
+-- 				return {}
+-- 			end
 
-			local root = tree:root()
-			print("Root node type:", root:type())
+-- 			local root = tree:root()
+-- 			print("Root node type:", root:type())
 
 
-			local diagnostics = {}
+-- 			local diagnostics = {}
 
-			local function check_node(node)
-				if node:type() == "identifier" then
-					local text = vim.treesitter.get_node_text(node, bufnr)
-					if text:find("Id") then
-						local start_row, start_col, end_row, end_col = node:range()
-						table.insert(diagnostics, {
-							row = start_row + 1,
-							col = start_col,
-							end_row = end_row + 1,
-							end_col = end_col,
-							source = "IdVariableCheck",
-							message = "Variable name contains 'Id', consider renaming",
-							severity = vim.diagnostic.severity.INFO
-						})
-					end
-				end
+-- 			local function check_node(node)
+-- 				if node:type() == "identifier" then
+-- 					local text = vim.treesitter.get_node_text(node, bufnr)
+-- 					if text:find("Id") then
+-- 						local start_row, start_col, end_row, end_col = node:range()
+-- 						table.insert(diagnostics, {
+-- 							row = start_row + 1,
+-- 							col = start_col,
+-- 							end_row = end_row + 1,
+-- 							end_col = end_col,
+-- 							source = "IdVariableCheck",
+-- 							message = "Variable name contains 'Id', consider renaming",
+-- 							severity = vim.diagnostic.severity.INFO
+-- 						})
+-- 					end
+-- 				end
 
-				for child in node:iter_children() do
-					check_node(child)
-				end
-			end
+-- 				for child in node:iter_children() do
+-- 					check_node(child)
+-- 				end
+-- 			end
 
-			check_node(root)
+-- 			check_node(root)
 
-			return diagnostics
-		end
-	}
+-- 			return diagnostics
+-- 		end
+-- 	}
+-- }
+
+-- if not null_ls.is_registered(go_new)
+-- then
+-- 	null_ls.register(go_new)
+-- end
+
+lvim.builtin.which_key.mappings["o"] = {
+	name = "open ai",
 }
-
-if not null_ls.is_registered(go_new)
-then
-	null_ls.register(go_new)
-end
+lvim.builtin.which_key.vmappings["o"] = {
+	name = "open ai",
+}
+local existing_o_mappings = lvim.builtin.which_key.mappings["o"]
 
 -- Additional Plugins
 lvim.plugins = {
@@ -376,21 +407,65 @@ lvim.plugins = {
 				}, llm.make_openai_spec_curl_args, llm.handle_openai_spec_data)
 			end
 
-			lvim.builtin.which_key.vmappings["o"] = {
-				name = "open ai",
-				h = { function() openai_help() end, "help" },
-				o = { function() openai_replace() end, "openai-replace" },
-				r = { function() claude_replace() end, "claude-replace" },
-			}
-			lvim.builtin.which_key.mappings["o"] = {
-				name = "open ai",
-				h = { function() openai_help() end, "help" },
-				o = { function() openai_replace() end, "openai-replace" },
-				r = { function() claude_replace() end, "claude-replace" },
-			}
+			existing_o_mappings.h = { function() openai_help() end, "help" }
+			existing_o_mappings.o = { function() openai_replace() end, "openai-replace" }
+			existing_o_mappings.r = { function() claude_replace() end, "claude-replace" }
+
+			for k, v in pairs(existing_o_mappings) do
+				lvim.builtin.which_key.vmappings["o"][k] = v
+				lvim.builtin.which_key.mappings["o"][k] = v
+			end
 		end,
 	},
+	{
+		dir = '/home/carl/oss/otter.nvim',
+		dependencies = {
+			'nvim-treesitter/nvim-treesitter',
+		},
+		opts = {
+			lsp = {
+				diagnostic_update_events = { "BufWritePost", "InsertLeave", "TextChanged" },
+				root_dir = function(_, bufnr)
+					return vim.fs.root(bufnr or 0, {
+						".git",
+						"_quarto.yml",
+						"package.json",
+					}) or vim.fn.getcwd(0)
+				end,
+			},
+			debug = false,
+			buffers = {
+				-- if  to true, the filetype of the otterbuffers will be set.
+				-- otherwise only the autocommand of lspconfig that attaches
+				-- the language server will be executed without setting the filetype
+				set_filetype = true,
+				-- write <path>.otter.<embedded language extension> files
+				-- to disk on save of main buffer.
+				-- usefule for some linters that require actual files.
+				-- otter files are deleted on quit or main buffer close
+				write_to_disk = true,
+				-- a table of preambles for each language. The key is the language and the value is a table of strings that will be written to the otter buffer starting on the first line.
+				preambles = {},
+				-- a table of postambles for each language. The key is the language and the value is a table of strings that will be written to the end of the otter buffer.
+				postambles = {},
+				-- A table of patterns to ignore for each language. The key is the language and the value is a lua match pattern to ignore.
+				-- lua patterns: https://www.lua.org/pil/20.2.html
+				ignore_pattern = {
+					-- ipython cell magic (lines starting with %) and shell commands (lines starting with !)
+					python = "^(%s*[%%!].*)",
+				},
+			},
+		}
+	},
 }
+
+
+existing_o_mappings.a = { "<cmd>lua require('otter').activate()<CR>", "Otter Activate" }
+
+for k, v in pairs(existing_o_mappings) do
+	lvim.builtin.which_key.vmappings["o"][k] = v
+	lvim.builtin.which_key.mappings["o"][k] = v
+end
 
 lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
 table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
