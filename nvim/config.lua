@@ -236,7 +236,6 @@ nvim_lsp.postgres_lsp.setup {
 	cmd = { "postgrestools", "lsp-proxy" },
 	filetypes = { "sql" },
 	root_dir = function(fname)
-		-- TODO: make this automatically build the file based on the repo -> db name
 		return vim.fs.root(fname, { 'postgrestools.jsonc' })
 	end,
 	single_file_support = true,
