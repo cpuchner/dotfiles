@@ -286,7 +286,65 @@ formatters.setup {
 	}
 }
 
--- local null_ls = require("null-ls")
+local null_ls = require("null-ls")
+
+
+local protogetter = {
+	name = "protogetter",
+	method = null_ls.methods.DIAGNOSTICS,
+	filetypes = { "go" },
+	generator = {
+		async = true,
+		fn = function(_params, done)
+			if vim.fn.expand("%:t") ~= "service.go" then
+				done()
+				return
+			end
+
+			local stdout = vim.loop.new_pipe(false)
+			local stderr = vim.loop.new_pipe(false)
+			local diagnostics = {}
+
+			local handle
+			handle = vim.loop.spawn("protogetter", {
+				args = { "./..." },
+				stdio = { nil, stdout, stderr },
+			}, function()
+				if stdout then
+					stdout:close()
+				end
+				if stderr then
+					stderr:close()
+				end
+				if handle then
+					handle:close()
+				end
+				done(diagnostics)
+			end)
+
+			if stderr then
+				stderr:read_start(function(_, data)
+					if data then
+						for _, line in ipairs(vim.split(data, "\n", { trimempty = true })) do
+							local _, lnum, col, msg = line:match("([^:]+):(%d+):(%d+):%s*(.+)")
+							if lnum and col and msg then
+								table.insert(diagnostics, {
+									row = tonumber(lnum),
+									col = tonumber(col),
+									message = msg,
+									severity = vim.diagnostic.severity.WARN,
+									source = "protogetter",
+								})
+							end
+						end
+					end
+				end)
+			end
+		end,
+	},
+}
+
+null_ls.register(protogetter)
 
 -- local go_new = {
 -- 	name = "carl-test",
@@ -454,52 +512,57 @@ lvim.plugins = {
 			end
 		end,
 	},
-	{
-		dir = '~/oss/otter.nvim',
-		dependencies = {
-			'nvim-treesitter/nvim-treesitter',
-		},
-		opts = {
-			lsp = {
-				diagnostic_update_events = { "BufWritePost", "InsertLeave", "TextChanged" },
-				root_dir = function(_, bufnr)
-					return vim.fs.root(bufnr or 0, {
-						".git",
-						"_quarto.yml",
-						"package.json",
-					}) or vim.fn.getcwd(0)
-				end,
-			},
-			debug = false,
-			buffers = {
-				-- if  to true, the filetype of the otterbuffers will be set.
-				-- otherwise only the autocommand of lspconfig that attaches
-				-- the language server will be executed without setting the filetype
-				set_filetype = true,
-				-- write <path>.otter.<embedded language extension> files
-				-- to disk on save of main buffer.
-				-- usefule for some linters that require actual files.
-				-- otter files are deleted on quit or main buffer close
-				write_to_disk = true,
-				-- a table of preambles for each language. The key is the language and the value is a table of strings that will be written to the otter buffer starting on the first line.
-				preambles = {},
-				-- a table of postambles for each language. The key is the language and the value is a table of strings that will be written to the end of the otter buffer.
-				postambles = {},
-				-- A table of patterns to ignore for each language. The key is the language and the value is a lua match pattern to ignore.
-				-- lua patterns: https://www.lua.org/pil/20.2.html
-				ignore_pattern = {
-					-- ipython cell magic (lines starting with %) and shell commands (lines starting with !)
-					python = "^(%s*[%%!].*)",
-				},
-			},
-		}
-	},
+	-- {
+	-- 	dir = '~/oss/otter.nvim',
+	-- 	dependencies = {
+	-- 		'nvim-treesitter/nvim-treesitter',
+	-- 	},
+	-- 	opts = {
+	-- 		lsp = {
+	-- 			diagnostic_update_events = { "BufWritePost", "InsertLeave", "TextChanged" },
+	-- 			root_dir = function(_, bufnr)
+	-- 				return vim.fs.root(bufnr or 0, {
+	-- 					".git",
+	-- 					"_quarto.yml",
+	-- 					"package.json",
+	-- 				}) or vim.fn.getcwd(0)
+	-- 			end,
+	-- 		},
+	-- 		debug = false,
+	-- 		buffers = {
+	-- 			-- if  to true, the filetype of the otterbuffers will be set.
+	-- 			-- otherwise only the autocommand of lspconfig that attaches
+	-- 			-- the language server will be executed without setting the filetype
+	-- 			set_filetype = true,
+	-- 			-- write <path>.otter.<embedded language extension> files
+	-- 			-- to disk on save of main buffer.
+	-- 			-- usefule for some linters that require actual files.
+	-- 			-- otter files are deleted on quit or main buffer close
+	-- 			write_to_disk = true,
+	-- 			-- a table of preambles for each language. The key is the language and the value is a table of strings that will be written to the otter buffer starting on the first line.
+	-- 			preambles = {},
+	-- 			-- a table of postambles for each language. The key is the language and the value is a table of strings that will be written to the end of the otter buffer.
+	-- 			postambles = {},
+	-- 			-- A table of patterns to ignore for each language. The key is the language and the value is a lua match pattern to ignore.
+	-- 			-- lua patterns: https://www.lua.org/pil/20.2.html
+	-- 			ignore_pattern = {
+	-- 				-- ipython cell magic (lines starting with %) and shell commands (lines starting with !)
+	-- 				python = "^(%s*[%%!].*)",
+	-- 			},
+	-- 		},
+	-- 	}
+	-- },
 }
 
+local otter_enabled = false;
 vim.api.nvim_create_autocmd("InsertEnter", {
 	group = vim.api.nvim_create_augroup("otter-autostart", { clear = true }),
 	pattern = { "*.go" },
 	callback = function(opts)
+		if not otter_enabled then
+			return
+		end
+
 		local bufnr = opts.buf
 
 		local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
