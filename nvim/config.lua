@@ -485,7 +485,7 @@ lvim.plugins = {
 			local function openai_replace()
 				llm.invoke_llm_and_stream_into_editor({
 					url = 'https://api.openai.com/v1/chat/completions',
-					model = 'gpt-4o',
+					model = 'o4-mini',
 					api_key_name = 'OPENAI_API_KEY',
 					system_prompt = system_prompt,
 					replace = true,
@@ -495,7 +495,7 @@ lvim.plugins = {
 			local function openai_help()
 				llm.invoke_llm_and_stream_into_editor({
 					url = 'https://api.openai.com/v1/chat/completions',
-					model = 'gpt-4o',
+					model = 'o4-mini',
 					api_key_name = 'OPENAI_API_KEY',
 					system_prompt = helpful_prompt,
 					replace = false,
@@ -503,8 +503,8 @@ lvim.plugins = {
 			end
 
 			existing_o_mappings.h = { function() openai_help() end, "help" }
-			existing_o_mappings.o = { function() openai_replace() end, "openai-replace" }
-			existing_o_mappings.r = { function() claude_replace() end, "claude-replace" }
+			existing_o_mappings.r = { function() openai_replace() end, "openai-replace" }
+			existing_o_mappings.c = { function() claude_replace() end, "claude-replace" }
 
 			for k, v in pairs(existing_o_mappings) do
 				lvim.builtin.which_key.vmappings["o"][k] = v
