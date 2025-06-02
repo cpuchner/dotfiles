@@ -25,7 +25,7 @@ lvim.format_on_save = false
 -- lvim.colorscheme = "kanagawa-dragon"
 -- lvim.colorscheme = "tokyonight-night"
 -- lvim.colorscheme = "nordic"
-lvim.colorscheme = "nord"
+lvim.colorscheme = "kanagawa-dragon"
 
 -- to disable icons and use a minimalist setup, uncomment the following
 lvim.use_icons = true
@@ -47,55 +47,6 @@ lvim.builtin.telescope.defaults.layout_strategy = "vertical"
 lvim.builtin.telescope.defaults.layout_config = {
 	vertical = { width = 0.8, height = 0.8, prompt_position = "top", preview_height = 0.6 }
 }
-
-lvim.builtin.cmp.formatting.format = function(entry, vim_item)
-	local max_width = lvim.builtin.cmp.formatting.max_width
-	if max_width ~= 0 and #vim_item.abbr > max_width then
-		vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. lvim.icons.ui.Ellipsis
-	end
-	if lvim.use_icons then
-		vim_item.kind = lvim.builtin.cmp.formatting.kind_icons[vim_item.kind]
-
-		if entry.source.name == "copilot" then
-			vim_item.kind = lvim.icons.git.Octoface
-			vim_item.kind_hl_group = "CmpItemKindCopilot"
-		end
-
-		if entry.source.name == "cmp_tabnine" then
-			vim_item.kind = lvim.icons.misc.Robot
-			vim_item.kind_hl_group = "CmpItemKindTabnine"
-		end
-
-		if entry.source.name == "crates" then
-			vim_item.kind = lvim.icons.misc.Package
-			vim_item.kind_hl_group = "CmpItemKindCrate"
-		end
-
-		if entry.source.name == "lab.quick_data" then
-			vim_item.kind = lvim.icons.misc.CircuitBoard
-			vim_item.kind_hl_group = "CmpItemKindConstant"
-		end
-
-		if entry.source.name == "emoji" then
-			vim_item.kind = lvim.icons.misc.Smiley
-			vim_item.kind_hl_group = "CmpItemKindEmoji"
-		end
-	end
-	vim_item.menu = lvim.builtin.cmp.formatting.source_names[entry.source.name]
-	vim_item.dup = lvim.builtin.cmp.formatting.duplicates[entry.source.name]
-			or lvim.builtin.cmp.formatting.duplicates_default
-
-	local item = entry.completion_item
-	local details = nil
-	if item and item.labelDetails then
-		details = item.labelDetails.description
-	end
-	if details and details ~= "" then
-		vim_item.menu = (vim_item.menu or "") .. " " .. details
-	end
-
-	return vim_item
-end
 
 -- lvim.builtin.telescope.defaults.mappings = {
 --   -- for input mode
@@ -419,6 +370,7 @@ lvim.plugins = {
 	{ "lunarvim/colorschemes" },
 	{ "rebelot/kanagawa.nvim" },
 	{ "folke/tokyonight.nvim" },
+	{ "rebelot/kanagawa.nvim" },
 	{ "AlexvZyl/nordic.nvim" },
 	{ "shaunsingh/nord.nvim" },
 	{
