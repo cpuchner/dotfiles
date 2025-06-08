@@ -25,7 +25,7 @@ lvim.format_on_save = false
 -- lvim.colorscheme = "kanagawa-dragon"
 -- lvim.colorscheme = "tokyonight-night"
 -- lvim.colorscheme = "nordic"
-lvim.colorscheme = "kanagawa-dragon"
+lvim.colorscheme = "kanagawa"
 
 -- to disable icons and use a minimalist setup, uncomment the following
 lvim.use_icons = true
