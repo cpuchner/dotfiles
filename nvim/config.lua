@@ -180,7 +180,7 @@ nvim_lsp.denols.setup {
 	root_dir = nvim_lsp.util.root_pattern("deno.json"),
 }
 nvim_lsp.tsserver.setup {
-	root_dir = nvim_lsp.util.root_pattern("package.json"),
+	root_dir = nvim_lsp.util.root_pattern("tsconfig.json"),
 	single_file_support = false
 }
 nvim_lsp.postgres_lsp.setup {
@@ -197,8 +197,8 @@ nvim_lsp.postgres_lsp.setup {
 -- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
 -- Not quite as nice as just starting based on root pattern
 -- lvim.lsp.on_attach_callback = function(client, bufnr)
---   local nvim_lsp = require("lspconfig")
---   if nvim_lsp.util.root_pattern("deno.json", "import_map.json")(vim.fn.getcwd()) then
+--   local _nvim_lsp = require("lspconfig")
+--   if _nvim_lsp.util.root_pattern("deno.json")(vim.fn.getcwd()) then
 --       if client.name == "tsserver" then
 --           client.stop()
 --           return
