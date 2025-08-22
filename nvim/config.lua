@@ -12,7 +12,7 @@ an executable
 --
 --
 
-vim.opt.expandtab = false
+vim.opt.expandtab = true
 
 lvim.builtin.nvimtree.setup.view.width = 79;
 
@@ -34,6 +34,17 @@ lvim.use_icons = true
 lvim.leader = "space"
 -- add your own keymapping
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
+
+-- vim.keymap.set('n', ',', "'")
+vim.keymap.set('n', ',', function()
+  local char = vim.fn.nr2char(vim.fn.getchar())
+  if char:match('%l') then
+    vim.cmd.normal("'" .. char:upper())
+  else
+    vim.cmd.normal("'" .. char)
+  end
+end)
+
 -- lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 -- lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
 -- unmap a default keymapping
@@ -207,7 +218,7 @@ nvim_lsp.postgres_lsp.setup {
 -- end
 
 -- -- set additional linters
--- local linters = require "lvim.lsp.null-ls.linters"
+local linters = require "lvim.lsp.null-ls.linters"
 -- linters.setup {
 --   { command = "eslint_d",
 --     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
@@ -217,15 +228,11 @@ formatters.setup {
 	{ command = "black", filetypes = { "python" } },
 	{
 		command = "prettier",
-		filetypes = { "html", "typescriptreact", "javascriptreact" }
-	},
-	{
-		command = "biome",
-		filetypes = { "typescript", "javascript" }
+		filetypes = { "typescript", "html", "typescriptreact", "javascriptreact" }
 	},
 	-- {
-	--   command = "eslint_d",
-	--   filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+	-- 	command = "biome",
+	-- 	filetypes = { "typescript", "javascript" }
 	-- },
 	-- {
 	--   command = "dprint",
@@ -239,63 +246,61 @@ formatters.setup {
 
 local null_ls = require("null-ls")
 
+-- local protogetter = {
+-- 	name = "protogetter",
+-- 	method = null_ls.methods.DIAGNOSTICS,
+-- 	filetypes = { "go" },
+-- 	generator = {
+-- 		async = true,
+-- 		fn = function(_params, done)
+-- 			if vim.fn.expand("%:t") ~= "service.go" then
+-- 				done()
+-- 				return
+-- 			end
 
-local protogetter = {
-	name = "protogetter",
-	method = null_ls.methods.DIAGNOSTICS,
-	filetypes = { "go" },
-	generator = {
-		async = true,
-		fn = function(_params, done)
-			if vim.fn.expand("%:t") ~= "service.go" then
-				done()
-				return
-			end
+-- 			local stdout = vim.loop.new_pipe(false)
+-- 			local stderr = vim.loop.new_pipe(false)
+-- 			local diagnostics = {}
 
-			local stdout = vim.loop.new_pipe(false)
-			local stderr = vim.loop.new_pipe(false)
-			local diagnostics = {}
+-- 			local handle
+-- 			handle = vim.loop.spawn("protogetter", {
+-- 				args = { "./..." },
+-- 				stdio = { nil, stdout, stderr },
+-- 			}, function()
+-- 				if stdout then
+-- 					stdout:close()
+-- 				end
+-- 				if stderr then
+-- 					stderr:close()
+-- 				end
+-- 				if handle then
+-- 					handle:close()
+-- 				end
+-- 				done(diagnostics)
+-- 			end)
 
-			local handle
-			handle = vim.loop.spawn("protogetter", {
-				args = { "./..." },
-				stdio = { nil, stdout, stderr },
-			}, function()
-				if stdout then
-					stdout:close()
-				end
-				if stderr then
-					stderr:close()
-				end
-				if handle then
-					handle:close()
-				end
-				done(diagnostics)
-			end)
-
-			if stderr then
-				stderr:read_start(function(_, data)
-					if data then
-						for _, line in ipairs(vim.split(data, "\n", { trimempty = true })) do
-							local _, lnum, col, msg = line:match("([^:]+):(%d+):(%d+):%s*(.+)")
-							if lnum and col and msg then
-								table.insert(diagnostics, {
-									row = tonumber(lnum),
-									col = tonumber(col),
-									message = msg,
-									severity = vim.diagnostic.severity.WARN,
-									source = "protogetter",
-								})
-							end
-						end
-					end
-				end)
-			end
-		end,
-	},
-}
-
-null_ls.register(protogetter)
+-- 			if stderr then
+-- 				stderr:read_start(function(_, data)
+-- 					if data then
+-- 						for _, line in ipairs(vim.split(data, "\n", { trimempty = true })) do
+-- 							local _, lnum, col, msg = line:match("([^:]+):(%d+):(%d+):%s*(.+)")
+-- 							if lnum and col and msg then
+-- 								table.insert(diagnostics, {
+-- 									row = tonumber(lnum),
+-- 									col = tonumber(col),
+-- 									message = msg,
+-- 									severity = vim.diagnostic.severity.WARN,
+-- 									source = "protogetter",
+-- 								})
+-- 							end
+-- 						end
+-- 					end
+-- 				end)
+-- 			end
+-- 		end,
+-- 	},
+-- }
+-- null_ls.register(protogetter)
 
 -- local go_new = {
 -- 	name = "carl-test",
@@ -369,6 +374,7 @@ local existing_o_mappings = lvim.builtin.which_key.mappings["o"]
 lvim.plugins = {
 	{ "lunarvim/colorschemes" },
 	{ "rebelot/kanagawa.nvim" },
+	{ "jbyuki/venn.nvim" },
 	{ "folke/tokyonight.nvim" },
 	{ "rebelot/kanagawa.nvim" },
 	{ "AlexvZyl/nordic.nvim" },
