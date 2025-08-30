@@ -218,7 +218,7 @@ nvim_lsp.postgres_lsp.setup {
 -- end
 
 -- -- set additional linters
-local linters = require "lvim.lsp.null-ls.linters"
+-- local linters = require "lvim.lsp.null-ls.linters"
 -- linters.setup {
 --   { command = "eslint_d",
 --     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" } }
@@ -244,8 +244,7 @@ formatters.setup {
 	}
 }
 
-local null_ls = require("null-ls")
-
+-- local null_ls = require("null-ls")
 -- local protogetter = {
 -- 	name = "protogetter",
 -- 	method = null_ls.methods.DIAGNOSTICS,

@@ -1,0 +1,1 @@
+alias d='cd ~/dev && cd $(fd --type d --max-depth 2 | fzf)'
