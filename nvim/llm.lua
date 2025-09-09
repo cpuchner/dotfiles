@@ -179,7 +179,6 @@ function M.invoke_llm_and_stream_into_editor(opts, make_curl_args_fn, handle_dat
 		active_job = nil
 	end
 
-	-- how can I read the whole body when it's finished streamind
 	active_job = Job:new {
 		command = 'curl',
 		args = args,
@@ -189,7 +188,7 @@ function M.invoke_llm_and_stream_into_editor(opts, make_curl_args_fn, handle_dat
 		on_stderr = function(_, _) end,
 		on_exit = function(j)
 			active_job = nil
-			parse_and_call(table.concat(j:result()))
+			-- parse_and_call(table.concat(j:result()))
 		end,
 	}
 
