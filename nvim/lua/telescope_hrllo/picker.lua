@@ -1,7 +1,7 @@
 local Job          = require("plenary.job")
 local pickers      = require("telescope.pickers")
 local finders      = require("telescope.finders")
-local conf         = require("telescope.config").values
+local Sorter       = require("telescope.sorters").Sorter
 local actions      = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
@@ -61,14 +61,39 @@ local function build_entries(json)
       repo     = repo,
       path     = path,
       filename = filename, -- quickfix filename
-      lnum     = lnum, -- quickfix line
-      col      = col, -- quickfix column
-      text     = frag, -- quickfix text
+      lnum     = lnum,     -- quickfix line
+      col      = col,      -- quickfix column
+      text     = frag,     -- quickfix text
       ordinal  = table.concat({ repo, path or "", frag }, " "),
-      display  = string.format("%s — %s", repo, frag), -- repository with textMatches[0] as the display
+      display  = string.format("%s - %s — %s", repo, filename, frag),
     })
   end
   return entries
+end
+
+function S(opts)
+  opts = opts or {}
+  local fzy = opts.fzy_mod or require "telescope.algos.fzy"
+
+  return Sorter:new {
+    scoring_function = function(_, _, _, entry)
+      local function hash_str(s)
+        if type(s) ~= "string" then
+          s = tostring(s or "")
+        end
+        local h = 0
+        for i = 1, #s do
+          h = (h * 33 + s:byte(i)) % 4294967296
+        end
+        return h
+      end
+      return hash_str(entry and entry.repo)
+    end,
+
+    highlighter = function(_, prompt, display)
+      return fzy.positions(prompt, display)
+    end,
+  }
 end
 
 function M.hrllo()
@@ -81,7 +106,7 @@ function M.hrllo()
       results = {},
       entry_maker = function(x) return x end,
     }),
-    sorter = conf.generic_sorter({}),
+    sorter = S(),
     attach_mappings = function(bufnr, map)
       local function run_search()
         local query = action_state.get_current_line()
@@ -134,12 +159,12 @@ function M.hrllo()
         if not selection then
           return
         end
+
         -- vim.notify(vim.inspect(selection))
         vim.api.nvim_set_current_dir(selection.dir)
         if selection.filename and selection.filename ~= "" then
           vim.cmd("edit " .. vim.fn.fnameescape(selection.filename))
           vim.api.nvim_win_set_cursor(0, { 1, 1 })
-          vim.fn.search("\\<query\\>")
         end
       end)
 
