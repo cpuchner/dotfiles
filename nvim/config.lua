@@ -244,123 +244,6 @@ formatters.setup {
 	}
 }
 
--- local null_ls = require("null-ls")
--- local protogetter = {
--- 	name = "protogetter",
--- 	method = null_ls.methods.DIAGNOSTICS,
--- 	filetypes = { "go" },
--- 	generator = {
--- 		async = true,
--- 		fn = function(_params, done)
--- 			if vim.fn.expand("%:t") ~= "service.go" then
--- 				done()
--- 				return
--- 			end
-
--- 			local stdout = vim.loop.new_pipe(false)
--- 			local stderr = vim.loop.new_pipe(false)
--- 			local diagnostics = {}
-
--- 			local handle
--- 			handle = vim.loop.spawn("protogetter", {
--- 				args = { "./..." },
--- 				stdio = { nil, stdout, stderr },
--- 			}, function()
--- 				if stdout then
--- 					stdout:close()
--- 				end
--- 				if stderr then
--- 					stderr:close()
--- 				end
--- 				if handle then
--- 					handle:close()
--- 				end
--- 				done(diagnostics)
--- 			end)
-
--- 			if stderr then
--- 				stderr:read_start(function(_, data)
--- 					if data then
--- 						for _, line in ipairs(vim.split(data, "\n", { trimempty = true })) do
--- 							local _, lnum, col, msg = line:match("([^:]+):(%d+):(%d+):%s*(.+)")
--- 							if lnum and col and msg then
--- 								table.insert(diagnostics, {
--- 									row = tonumber(lnum),
--- 									col = tonumber(col),
--- 									message = msg,
--- 									severity = vim.diagnostic.severity.WARN,
--- 									source = "protogetter",
--- 								})
--- 							end
--- 						end
--- 					end
--- 				end)
--- 			end
--- 		end,
--- 	},
--- }
--- null_ls.register(protogetter)
-
--- local go_new = {
--- 	name = "carl-test",
--- 	method = null_ls.methods.DIAGNOSTICS,
--- 	filetypes = { "go" },
--- 	generator = {
--- 		fn = function(params)
--- 			local bufnr = params.bufnr
-
--- 			local parser = vim.treesitter.get_parser(bufnr)
--- 			if not parser then
--- 				vim.lsp.log.error("No treesitter parser found")
--- 				return {}
--- 			end
-
--- 			local tree = parser:trees()[1]
--- 			if not tree then
--- 				vim.lsp.log.error("No syntax tree found")
--- 				return {}
--- 			end
-
--- 			local root = tree:root()
--- 			print("Root node type:", root:type())
-
-
--- 			local diagnostics = {}
-
--- 			local function check_node(node)
--- 				if node:type() == "identifier" then
--- 					local text = vim.treesitter.get_node_text(node, bufnr)
--- 					if text:find("Id") then
--- 						local start_row, start_col, end_row, end_col = node:range()
--- 						table.insert(diagnostics, {
--- 							row = start_row + 1,
--- 							col = start_col,
--- 							end_row = end_row + 1,
--- 							end_col = end_col,
--- 							source = "IdVariableCheck",
--- 							message = "Variable name contains 'Id', consider renaming",
--- 							severity = vim.diagnostic.severity.INFO
--- 						})
--- 					end
--- 				end
-
--- 				for child in node:iter_children() do
--- 					check_node(child)
--- 				end
--- 			end
-
--- 			check_node(root)
-
--- 			return diagnostics
--- 		end
--- 	}
--- }
-
--- if not null_ls.is_registered(go_new)
--- then
--- 	null_ls.register(go_new)
--- end
-
 lvim.builtin.which_key.mappings["o"] = {
 	name = "open ai",
 }
@@ -558,9 +441,6 @@ for k, v in pairs(existing_o_mappings) do
 	lvim.builtin.which_key.vmappings["o"][k] = v
 	lvim.builtin.which_key.mappings["o"][k] = v
 end
-
-lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
-table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
 
 lvim.builtin.cmp.formatting.source_names["uuid"] = "(Uuid)"
 table.insert(lvim.builtin.cmp.sources, 1, { name = "uuid" })
