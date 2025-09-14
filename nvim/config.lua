@@ -89,6 +89,7 @@ lvim.builtin.which_key.mappings.l.h = { "<cmd>ToggleInlayHint<CR>", "Inlay Hints
 
 lvim.builtin.which_key.mappings["m"] = { "<cmd>Telescope marks<CR>", "Marks" }
 lvim.builtin.which_key.mappings["j"] = { "<cmd>Telescope projects<CR>", "Projects" }
+lvim.builtin.which_key.mappings.s.g = { "<cmd>Telescope hrllo<CR>", "Hrllo (github search)" }
 
 -- lvim.builtin.which_key.mappings["t"] = {
 --   name = "+Trouble",
@@ -366,6 +367,8 @@ lvim.plugins = {
     opts = {},
   },
 }
+
+require("telescope").load_extension "hrllo"
 
 for k, v in pairs(existing_o_mappings) do
   lvim.builtin.which_key.vmappings["o"][k] = v
