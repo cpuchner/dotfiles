@@ -442,7 +442,7 @@ lvim.plugins = {
 			local function openai_replace()
 				llm.invoke_llm_and_stream_into_editor({
 					url = 'https://api.openai.com/v1/chat/completions',
-					model = 'o4-mini',
+					model = 'gpt-5-2025-08-07',
 					api_key_name = 'OPENAI_API_KEY',
 					system_prompt = system_prompt,
 					replace = true,
@@ -452,7 +452,7 @@ lvim.plugins = {
 			local function openai_help()
 				llm.invoke_llm_and_stream_into_editor({
 					url = 'https://api.openai.com/v1/chat/completions',
-					model = 'o4-mini',
+					model = 'gpt-5-2025-08-07',
 					api_key_name = 'OPENAI_API_KEY',
 					system_prompt = helpful_prompt,
 					replace = false,
