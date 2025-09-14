@@ -254,6 +254,14 @@ local existing_o_mappings = lvim.builtin.which_key.mappings["o"]
 
 -- Additional Plugins
 lvim.plugins = {
+  {
+    '3rd/image.nvim',
+    build = false,
+    opts = {
+      window_overlap_clear_enabled = true,
+      processor = "magick_cli",
+    }
+  },
   { "lunarvim/colorschemes" },
   { "rebelot/kanagawa.nvim" },
   { "jbyuki/venn.nvim" },
@@ -356,7 +364,7 @@ lvim.plugins = {
     'MeanderingProgrammer/render-markdown.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     opts = {},
-  }
+  },
 }
 
 for k, v in pairs(existing_o_mappings) do
