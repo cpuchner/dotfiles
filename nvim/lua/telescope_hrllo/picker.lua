@@ -78,7 +78,7 @@ function M.hrllo()
   picker = pickers.new({}, {
     prompt_title = "GitHub Code Search (" .. M.owner .. ")",
     finder = finders.new_table({
-      results = {}, -- starts empty; we fill it after <CR>
+      results = {},
       entry_maker = function(x) return x end,
     }),
     sorter = conf.generic_sorter({}),
@@ -117,16 +117,16 @@ function M.hrllo()
       map("n", "<C-o>", run_search)
 
       -- Optional: open selected hit in browser with <C-o>
-      -- local function open_in_browser()
-      --   local entry = action_state.get_selected_entry()
-      --   if not entry then return end
-      --   local repo = entry.repo or "?"
-      --   local path = entry.path or ""
-      --   local url = string.format("https://github.com/%s/blob/HEAD/%s", repo, path)
-      --   vim.ui.open(url)
-      -- end
-      -- map("i", "<C-o>", open_in_browser)
-      -- map("n", "<C-o>", open_in_browser)
+      local function open_in_browser()
+        local entry = action_state.get_selected_entry()
+        if not entry then return end
+        local repo = entry.repo or "?"
+        local filename = entry.filename or ""
+        local url = string.format("https://github.com/%s/%s/blob/HEAD/%s", M.owner, repo, filename)
+        vim.ui.open(url)
+      end
+      map("i", "<C-h>", open_in_browser)
+      map("n", "<C-h>", open_in_browser)
 
       actions.select_default:replace(function()
         actions.close(bufnr)
